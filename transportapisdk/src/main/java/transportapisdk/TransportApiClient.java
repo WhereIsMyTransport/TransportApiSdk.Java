@@ -25,9 +25,9 @@ public class TransportApiClient {
 
 	private static AuthEndpoint authEndpoint;
     private static final String grant_type = "client_credentials";
-    private static final String client_id = "f18f08cc-47e2-43aa-9442-be6098340cd1";
+    private static final String client_id = "";
     private static final String scope = "transitapi:all";
-    private static final String client_secret = "a0Ta5D+DG1m9znTpCgsIezWSJ0S0sx2ONU4Cw3vkCCU=";
+    private static final String client_secret = "";
     private static String type = "Bearer";
     private String currentToken;
     private String currentTokenExpireDate;
