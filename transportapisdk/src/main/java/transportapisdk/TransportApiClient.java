@@ -4,6 +4,7 @@ import transportapisdk.models.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CountDownLatch;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -21,31 +22,80 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+interface ITransportApi
+{
+	@Headers({
+        "Accept: application/json",
+        "Content-Type: application/json"
+	})
+	@GET("agencies")
+	Call<List<Agency>> GetAgencies();
+}
+
 public class TransportApiClient {
+	
+	private TokenComponent tokenComponent;
 
-	private static AuthEndpoint authEndpoint;
-    private static final String grant_type = "client_credentials";
-    private static final String client_id = "";
-    private static final String scope = "transitapi:all";
-    private static final String client_secret = "";
-    private static String type = "Bearer";
-    private String currentToken;
-    private String currentTokenExpireDate;
-    private String currentTokenType;
+	private final CountDownLatch latch = new CountDownLatch(1);
+	
+	// TODO Not the greatest, but these are all the return values for the callbacks to set.
+	private List<Agency> agencies = null;
+    
+    public TransportApiClient(TransportApiClientSettings settings)
+    {
+    	if (settings == null)
+    	{
+    		throw new IllegalArgumentException("Settings cannot be null.");
+    	}
+    	
+    	this.tokenComponent = new TokenComponent(settings.ClientId, settings.ClientSecret);
+    }
+    
+    public List<Agency> GetAgencies()
+    {
+    	ITransportApi service = GetTransportApiClient();
+        
+        Call<List<Agency>> call = service.GetAgencies();
+        
+        call.enqueue(new Callback<List<Agency>>() {
+            public void onResponse(Call<List<Agency>> call, Response<List<Agency>> response) {
+            	agencies = response.body();
 
+                latch.countDown();
+            }
 
-    public TapiApiInterface getTapiApiClient(){
+            public void onFailure(Call<List<Agency>> call, Throwable t) {
+                System.out.print("TODO - Failed on GetAccessToken");
+                
+                latch.countDown();
+            }
+        });
+        
+        try
+        {
+           latch.await();
+        }
+        catch (InterruptedException e)
+        {
+        	System.out.print("TODO - Failed during latch await.");
+        }
 
+        return agencies;
+    }
+    
+    private ITransportApi GetTransportApiClient()
+    {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-        Interceptor headerIntercept = new Interceptor(){
+        Interceptor headerIntercept = new Interceptor()
+        {
             public okhttp3.Response intercept(Chain chain) throws IOException{
-                Request original =chain.request();
+                Request original = chain.request();
                 Request.Builder requestBuilder = original.newBuilder()
-                        .header("Authorization",type +" " +currentToken);
+                        .header("Authorization", "Bearer " + tokenComponent.GetAccessToken());
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
 
@@ -55,64 +105,32 @@ public class TransportApiClient {
         OkHttpClient finalClient = httpClient.addInterceptor(headerIntercept).addInterceptor(logging).readTimeout(60, TimeUnit.SECONDS).connectTimeout(60, TimeUnit.SECONDS).build();
 
         Retrofit restAdapter = new Retrofit.Builder()
-                .baseUrl("https://transit.whereismytransport.com/api/")
+                .baseUrl("https://platform.whereismytransport.com/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(finalClient)
                 .build();
-        return restAdapter.create(TapiApiInterface.class);
+        
+        return restAdapter.create(ITransportApi.class);
     }
 
-    //LibraryEntryPoint
-    public void getAuthenticationToken(TokenListener listener){
-        checkTokenRemainsValid(listener);
-    }
+   /* interface TapiApiInterface {
 
-    private void checkTokenRemainsValid(TokenListener listener){
-        DateAndTimeHandler dtHandler = new DateAndTimeHandler();
-        if(currentTokenExpireDate!= null & dtHandler.queryTimeDifference(currentTokenExpireDate)){
-            getNewToken(listener);
-        }
-        else{
-            listener.tokenValid(currentToken,currentTokenType,currentTokenExpireDate);
-        }
-    }
+    	@Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("agencies")
+    Call<List<Agency>>  getAgencies();
 
-    private static AuthEndpoint getAuthEndpoint(){
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(logging);
-        if(authEndpoint == null){
-            Retrofit restAdapter = new Retrofit.Builder()
-                    .baseUrl("https://identity.whereismytransport.com/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(httpClient.build())
-                    .build();
-            authEndpoint =restAdapter.create(AuthEndpoint.class);
-        }
-        return authEndpoint;
-    }
-
-
-    interface AuthEndpoint{
-
-        @FormUrlEncoded
-        @POST("connect/token")
-        Call<User> getUserToken(@Field("client_id") String clientID, @Field("client_secret") String clientSecret,@Field("grant_type") String grantType,@Field("scope") String scope);
-
-    }
-
-    interface TapiApiInterface {
-
+   /* 	
         @Headers({
                 "Accept: application/json",
                 "Content-Type: application/json"
         })
         @GET("api/agencies?point={point}&radius={radius}&bbox={bbox}&agencies={agencies}&limit={limit}&offset={offset}&at={at}")
         Call<List<Agency>>  getAgencies(@Path("point") Point point, @Path("radius") int radius, @Path("bbox") List<String> bbox,@Path("agencies") List<String> agencies,@Path("limit") int limit,@Path("offset") int offset,@Path("at") String at );
-
-
+*/
+/*
         @Headers({
                 "Accept: application/json",
                 "Content-Type: application/json"
@@ -220,24 +238,5 @@ public class TransportApiClient {
         })
         @POST("journeys")
         Call<Journey> getJourney(@Body JourneyPOST journey);
-    }
-
-    private void getNewToken(final TokenListener listener){
-        final DateAndTimeHandler dtHandler = new DateAndTimeHandler();
-        TransportApiClient.AuthEndpoint service = TransportApiClient.getAuthEndpoint();
-        Call<User> call = service.getUserToken(TransportApiClient.client_id, TransportApiClient.client_secret, TransportApiClient.grant_type, TransportApiClient.scope);
-        call.enqueue(new Callback<User>() {
-            public void onResponse(Call<User> call, Response<User> response) {
-                User user = response.body();
-                currentToken = user.getAccessToken();
-                currentTokenType = user.getTokenType();
-                currentTokenExpireDate = dtHandler.getTokenExpiryDate(user.getExpiresIn());
-                listener.tokenValid(currentToken,currentTokenType,currentTokenExpireDate);
-            }
-
-            public void onFailure(Call<User> call, Throwable t) {
-
-            }
-        });
-    }
+    }*/
 }

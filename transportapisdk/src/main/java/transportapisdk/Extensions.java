@@ -5,48 +5,61 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateAndTimeHandler {
+class Extensions {
 
-
-    public DateAndTimeHandler() {
-    }
-
-
-    public String getCurrentDateAndTimeForDifferenceQuery(){
+	public static boolean isNullOrWhiteSpace(String value) 
+	{
+	    return value == null || value.trim().isEmpty();
+	}
+	
+	public static String getCurrentDateAndTimeForDifferenceQuery()
+	{
         Calendar c = Calendar.getInstance();
+        
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss a");
+        
         return sdf.format(c.getTime());
     }
 
-    public String getTokenExpiryDate(int secondsInFuture){
+    public static String getTokenExpiryDate(int secondsInFuture)
+    {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, secondsInFuture);
-        System.out.println(calendar.getTime());
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss a");
+        
         return sdf.format(calendar.getTime());
     }
 
 
-    public boolean queryTimeDifference(String inputtingFutureDate){
+    public static boolean tokenIsExpired(String inputtingFutureDate)
+    {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss a");
         Date testingDate = null;
         Date currentDate = null;
-        try {
+        
+        try 
+        {
             testingDate = sdf.parse(inputtingFutureDate);
             currentDate = sdf.parse(getCurrentDateAndTimeForDifferenceQuery());
-        } catch (ParseException e) {
+        } 
+        catch (ParseException e) 
+        {
             e.printStackTrace();
         }
 
-        if (testingDate != null && currentDate != null) {
-            if(currentDate.after(testingDate)){
+        if (testingDate != null && currentDate != null)
+        {
+            if(currentDate.after(testingDate))
+            {
                 return true;
             }
-        } else {
+        } 
+        else 
+        {
             return false;
         }
 
         return false;
     }
 }
-

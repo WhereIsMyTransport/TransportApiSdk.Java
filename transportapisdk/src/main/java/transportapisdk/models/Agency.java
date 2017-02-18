@@ -6,6 +6,7 @@ public class Agency {
     private String href;
     private String name;
     private String culture;
+    private String description;
 
     /**
      *
@@ -78,5 +79,23 @@ public class Agency {
     public void setCulture(String culture) {
         this.culture = culture;
     }
+    
+    /**
+    *
+    * @return
+    * The description
+    */
+   public String getDescription() {
+       return description;
+   }
+
+   /**
+    *
+    * @param description
+    * The description
+    */
+   public void setDescription(String description) {
+       this.description = description;
+   }
 
 }
