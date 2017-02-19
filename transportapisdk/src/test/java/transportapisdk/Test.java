@@ -13,7 +13,9 @@ public class Test {
 	    
 		TransportApiClient client = new TransportApiClient(new TransportApiClientSettings(clientId, clientSecret));
 		
-		List<Agency> agencies = client.GetAgencies();
+		List<Agency> agencies = client.GetAgencies(AgencyOptions.Default());
+		
+		List<Agency> agenciesNearby = client.GetAgenciesNearby(AgencyOptions.Default(), -33.986342, 18.468806, 5000);
 	}
 
 }
