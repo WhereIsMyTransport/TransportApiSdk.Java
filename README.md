@@ -21,6 +21,12 @@ List<Agency> agencies = client.GetAgencies();
 // Do fancy things with the results.
 ```
 
+## Features
+
+The following end-points are available:
+
+* GET api/agencies
+
 ## Installation
 
 TODO
