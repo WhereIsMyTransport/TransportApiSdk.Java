@@ -1,6 +1,5 @@
 package transportapisdk.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LineString extends Geometry {
@@ -9,6 +8,7 @@ public class LineString extends Geometry {
 	
 	public LineString(List<List<Double>> coordinates) {
 		super(LineString.class.getSimpleName());
+		
 		this.coordinates = coordinates;
 	}
 	

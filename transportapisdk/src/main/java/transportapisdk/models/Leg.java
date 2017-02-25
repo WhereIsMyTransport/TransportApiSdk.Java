@@ -1,19 +1,23 @@
 package transportapisdk.models;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 public class Leg {
 
     private String type;
+    private String behaviour;
     private Distance distance;
     private int duration;
-    private List<Waypoint> waypoints = new ArrayList<Waypoint>();
-    private List<Direction> directions = new ArrayList<Direction>();
-    private LineString geometry;
     private Line line;
     private Vehicle vehicle;
     private Fare fare;
+    private List<Waypoint> waypoints = new ArrayList<Waypoint>();
+    private List<Direction> directions = new ArrayList<Direction>();
+    private LineString geometry;
+    
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
@@ -33,6 +37,24 @@ public class Leg {
     public void setType(String type) {
         this.type = type;
     }
+    
+    /**
+    *
+    * @return
+    * The behaviour
+    */
+   public String getBehaviour() {
+       return behaviour;
+   }
+
+   /**
+    *
+    * @param behaviour
+    * The behaviour
+    */
+   public void setBehaviour(String behaviour) {
+       this.behaviour = behaviour;
+   }
 
     /**
      *

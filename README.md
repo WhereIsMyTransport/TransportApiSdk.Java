@@ -29,7 +29,20 @@ The following end-points are available:
 
 ## Installation
 
-TODO
+NOTE: Neither of these work yet.
+
+Import via Maven:
+```xml
+<dependency>
+  <groupId>com.whereismytransport.transportapisdk</groupId>
+  <artifactId>transportapisdk</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+or Gradle:
+```groovy
+compile 'com.whereismytransport.transportapisdk:transportapisdk:0.1.0'
+```
 
 ## Author
 

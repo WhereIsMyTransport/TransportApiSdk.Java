@@ -8,11 +8,13 @@ public class Journey {
     private String id;
     private String href;
     private MultiPoint geometry;
-    private String earliestDepartureTime;
-    private String latestArrivalTime;
+    private String time;
+    private TimeType timeType;
+    private Profile profile;
+    private Only only;
+    private Omit omit;
     private int maxItineraries;
-    private List<Object> modes = new ArrayList<Object>();
-    private List<Object> agencies = new ArrayList<Object>();
+    private List<String> fareProducts = new ArrayList<String>();
     private List<Itinerary> itineraries = new ArrayList<Itinerary>();
 
     /**
@@ -50,6 +52,60 @@ public class Journey {
     public void setHref(String href) {
         this.href = href;
     }
+    
+    /**
+    *
+    * @return
+    * The time
+    */
+   public String getTime() {
+       return time;
+   }
+
+   /**
+    *
+    * @param time
+    * The time
+    */
+   public void setTime(String time) {
+       this.time = time;
+   }
+   
+   /**
+   *
+   * @return
+   * The timeType
+   */
+  public TimeType getTimeType() {
+      return timeType;
+  }
+
+  /**
+   *
+   * @param time
+   * The time
+   */
+  public void setTimeType(TimeType timeType) {
+      this.timeType = timeType;
+  }
+  
+  /**
+  *
+  * @return
+  * The profile
+  */
+ public Profile getProfile() {
+     return profile;
+ }
+
+ /**
+  *
+  * @param profile
+  * The profile
+  */
+ public void setProfile(Profile profile) {
+     this.profile = profile;
+ }
 
     /**
      *
@@ -59,44 +115,15 @@ public class Journey {
     public MultiPoint getGeometry() {
         return geometry;
     }
-
-
-
+    
     /**
-     *
-     * @return
-     * The earliestDepartureTime
-     */
-    public String getEarliestDepartureTime() {
-        return earliestDepartureTime;
-    }
-
-    /**
-     *
-     * @param earliestDepartureTime
-     * The earliestDepartureTime
-     */
-    public void setEarliestDepartureTime(String earliestDepartureTime) {
-        this.earliestDepartureTime = earliestDepartureTime;
-    }
-
-    /**
-     *
-     * @return
-     * The latestArrivalTime
-     */
-    public String getLatestArrivalTime() {
-        return latestArrivalTime;
-    }
-
-    /**
-     *
-     * @param latestArrivalTime
-     * The latestArrivalTime
-     */
-    public void setLatestArrivalTime(String latestArrivalTime) {
-        this.latestArrivalTime = latestArrivalTime;
-    }
+    *
+    * @param geometry
+    * The geometry
+    */
+   public void setGeometry(MultiPoint geometry) {
+       this.geometry = geometry;
+   }
 
     /**
      *
@@ -119,37 +146,19 @@ public class Journey {
     /**
      *
      * @return
-     * The agencies
+     * The fareProducts
      */
-    public List<Object> getModes() {
-        return modes;
+    public List<String> getFareProducts() {
+        return fareProducts;
     }
 
     /**
      *
-     * @param modes
-     * The agencies
+     * @param fareProducts
+     * The fareProducts
      */
-    public void setModes(List<Object> modes) {
-        this.modes = modes;
-    }
-
-    /**
-     *
-     * @return
-     * The agencies
-     */
-    public List<Object> getAgencies() {
-        return agencies;
-    }
-
-    /**
-     *
-     * @param agencies
-     * The agencies
-     */
-    public void setAgencies(List<Object> agencies) {
-        this.agencies = agencies;
+    public void setFareProducts(List<String> fareProducts) {
+        this.fareProducts = fareProducts;
     }
 
     /**
@@ -169,5 +178,41 @@ public class Journey {
     public void setItineraries(List<Itinerary> itineraries) {
         this.itineraries = itineraries;
     }
+    
+    /**
+    *
+    * @return
+    * The only objects used in the call.
+    */
+   public Only getOnly() {
+       return only;
+   }
+
+   /**
+    *
+    * @param only
+    * The only objects used in the call.
+    */
+   public void setOnly(Only only) {
+       this.only = only;
+   }
+   
+   /**
+   *
+   * @return
+   * The objects omitted from the call.
+   */
+  public Omit getOmit() {
+      return omit;
+  }
+
+  /**
+   *
+   * @param only
+   * The objects omitted from the call.
+   */
+  public void setOmit(Omit omit) {
+      this.omit = omit;
+  }
 
 }

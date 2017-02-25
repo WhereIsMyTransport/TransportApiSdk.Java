@@ -9,7 +9,7 @@ public class Point extends Geometry
 	
 	public Point(double longtitude, double latitude) 
 	{		
-		super(Point.class.getSimpleName());
+		super("Point");
 		
 		coordinates = new ArrayList<Double>();
 		
@@ -25,6 +25,11 @@ public class Point extends Geometry
         coords[1] = coordinates.get(1);
         
 		return coords;
+	}
+	
+	public List<Double> getCoordinatesList() 
+	{
+		return coordinates;
 	}
 	
 	public String toString()

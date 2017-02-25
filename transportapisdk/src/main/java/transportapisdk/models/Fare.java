@@ -7,27 +7,27 @@ import java.util.List;
 
 public class Fare {
 
-    private String fareDescription;
+    private String description;
     private FareProduct fareProduct;
     private Cost cost;
-    private List<Object> messages = new ArrayList<Object>();
+    private List<String> messages = new ArrayList<String>();
 
     /**
      * 
      * @return
-     *     The fareDescription
+     *     The description
      */
-    public String getFareDescription() {
-        return fareDescription;
+    public String getDescription() {
+        return description;
     }
 
     /**
      * 
-     * @param fareDescription
-     *     The fareDescription
+     * @param description
+     *     The description
      */
-    public void setFareDescription(String fareDescription) {
-        this.fareDescription = fareDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**
@@ -71,7 +71,7 @@ public class Fare {
      * @return
      *     The messages
      */
-    public List<Object> getMessages() {
+    public List<String> getMessages() {
         return messages;
     }
 
@@ -80,7 +80,7 @@ public class Fare {
      * @param messages
      *     The messages
      */
-    public void setMessages(List<Object> messages) {
+    public void setMessages(List<String> messages) {
         this.messages = messages;
     }
 

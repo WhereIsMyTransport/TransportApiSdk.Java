@@ -1,6 +1,5 @@
 package transportapisdk.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MultiPoint extends Geometry {
@@ -8,7 +7,8 @@ public class MultiPoint extends Geometry {
 	private List<List<Double>> coordinates;
 	
 	public MultiPoint(List<List<Double>> coordinates) {
-		super(MultiPoint.class.getName());
+		super("MultiPoint");
+		
 		this.coordinates = coordinates;
 	}
 	

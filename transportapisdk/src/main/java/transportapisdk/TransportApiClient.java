@@ -17,6 +17,33 @@ public class TransportApiClient {
     	this.tokenComponent = new TokenComponent(settings.ClientId, settings.ClientSecret);
     }
     
+    /**
+     * Gets a list of agencies nearby ordered by distance from the point specified.
+     *
+     * @param  options  		Options to limit the results by. Default: JourneyOptions.Default()
+     * @param  startLatitude	Latitude in decimal degrees to depart from.
+     * @param  startLongitude	Longitude in decimal degrees to depart from.
+     * @param  endLatitude		Latitude in decimal degrees of the desitnation.
+     * @param  endLongitude		Longitude in decimal degrees of the desitnation.
+     * @return      			A journey from A to B using public transport.
+     */
+    public Journey PostJourney(JourneyOptions options, double startLatitude, double startLongitude, double endLatitude, double endLongitude)
+    {
+    	if (options == null)
+    	{
+    		options = JourneyOptions.Default();
+    	}
+    	
+    	return TransportApiClientCalls.PostJourney(tokenComponent, options, new Point(startLongitude, startLatitude), new Point(endLongitude, endLatitude));
+    }
+    
+    
+    /**
+     * Gets a list of all agencies in the system.
+     *
+     * @param  options  Options to limit the results by. Default: AgencyOptions.Default()
+     * @return      	A list of all agencies.
+     */
     public List<Agency> GetAgencies(AgencyOptions options)
     {
     	if (options == null)
@@ -27,6 +54,15 @@ public class TransportApiClient {
     	return TransportApiClientCalls.GetAgencies(tokenComponent, options, null, null, null);
     }
     
+    /**
+     * Gets a list of agencies nearby ordered by distance from the point specified.
+     *
+     * @param  options  		Options to limit the results by. Default: AgencyOptions.Default()
+     * @param  latitude			Latitude in decimal degrees.
+     * @param  longitude		Longitude in decimal degrees.
+     * @param  radiusInMeters	Radius in meters to filter results by.
+     * @return      			A list of agencies nearby the specified point.
+     */
     public List<Agency> GetAgenciesNearby(AgencyOptions options, double latitude, double longitude, int radiusInMeters)
     {
     	if (options == null)
@@ -45,9 +81,9 @@ public class TransportApiClient {
     /**
      * Gets a list of all agencies within a bounding box.
      *
-     * @param  options  	options to limit the results by.
-     * @param  boundingBox 	the bounding box from where to retrieve agencies. See valid examples here: http://developer.whereismytransport.com/documentation#bounding-box.
-     * @return      		a list of agencies within a bounding box.
+     * @param  options  	Options to limit the results by. Default: AgencyOptions.Default()
+     * @param  boundingBox 	The bounding box from where to retrieve agencies. See valid examples here: http://developer.whereismytransport.com/documentation#bounding-box.
+     * @return      		A list of agencies within a bounding box.
      */
     public List<Agency> GetAgenciesByBoundingBox(AgencyOptions options, String boundingBox)
     {
@@ -69,131 +105,4 @@ public class TransportApiClient {
     	
     	return TransportApiClientCalls.GetAgencies(tokenComponent, options, null, null, boundingBox);
     }
-
-   /* interface TapiApiInterface {
-
-    	@Headers({
-            "Accept: application/json",
-            "Content-Type: application/json"
-    })
-    @GET("agencies")
-    Call<List<Agency>>  getAgencies();
-
-   /* 	
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("api/agencies?point={point}&radius={radius}&bbox={bbox}&agencies={agencies}&limit={limit}&offset={offset}&at={at}")
-        Call<List<Agency>>  getAgencies(@Path("point") Point point, @Path("radius") int radius, @Path("bbox") List<String> bbox,@Path("agencies") List<String> agencies,@Path("limit") int limit,@Path("offset") int offset,@Path("at") String at );
-*/
-/*
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("agencies/{agencyId}?at={at}")
-        Call<Agency>  getAgencyByID(@Path("agencyId") String id,@Path("at") String at);
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("stops?point={point}&radius={radius}&bbox={bbox}&modes={modes}&agencies={agencies}&servesLines={lineIds}&limit={limit}&offset={offset}&at={at}")
-        Call<List<Stop>> getStops(@Path("point") Point point,@Path("radius") int radius,@Path("bbox") List<String> bbox,@Path("modes") List<String> modes,@Path("agencies") List<String> agencies,@Path("servesLine") String servesLine,@Path("limit") int limit,@Path("offset") int offset,@Path("at") String at);
-
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("stops/{stopId}?at={at}")
-        Call<Stop> getStopByID(@Path("stopId") String stopId,@Path("at") String at);
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("stops/{stopId}/timetables?earliestArrivalTime={earliestArrivalTime}&limit={limit}&at={at}")
-        Call<StopTimetable> getStopTimetable(@Path("stopId") String stopId,@Path("earliestArrivalTime") String earliestArrivalTime,@Path("limit") int limit,@Path("at") String at);
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("lines?agencies={agencies}&servesStops={servesStops}&limit={limit}&offset={offset}&at={at}")
-        Call<List<Line>> getLines(@Path("agencies") List<String> agencies,@Path("servesStops") String servesStops,@Path("limit") int limit,@Path("offset") int offset,@Path("at") String at);
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("lines/{lineId}?at={at}")
-        Call<Line> getLineByID(@Path("lineId") String lineId);
-
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("lines/{lineId}/timetables?earliestDepartureTime={earliestDepartureTime}&limit={limit}&at={at}")
-        Call<LineTimetable> getLineTimetable(@Path("lineId") String lineId,@Path("earliestDepartureTime") String earliestDepartureTime,@Path("limit") int limit,@Path("at") String at);
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("lines/{lineId}/shape?at={at}")
-        Call<LineShape> getLineShape(@Path("lineId") String lineId,@Path("at") String at);
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("journeys/{journeyId}?fareproducts={fareProductIds}")
-        Call<Journey> getJourneyByID(@Path("journeyId") String journeyId,@Path("fareproducts") String fareProducts);
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("journeys/{journeyId}/itineraries/{itineraryId}?fareproducts={fareProductIds}")
-        Call<Itinerary> getItineraryByID(@Path("journeyId") String journeyId,@Path("itineraryId") String itineraryId,@Path("fareProductIds") List<String> fareProducts);
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("journeys/{journeyId}/itineraries?fareproducts={fareProductIds}")
-        Call<Itinerary> getItineraryWithApplicationOfFareProduct(@Path("journeyId") String journeyId,@Path("fareProductIds") List<String> fareProductIds);
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("fareproducts?agencies={agencies}&limit={limit}&offset={offset}&at={at}")
-        Call<List<FareProduct>> getFareProducts(@Path("agencies") List<String> agencies,@Path("limit") int limit,@Path("offset") int offset,@Path("at") String at);
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("fareproducts/{fareProductId}/faretables?limit={limit}&offset={offset}&at={at}")
-        Call<List<FareTable>> getFareTables(@Path("fareProductId") String fareProductId, @Path("limit") int limit,@Path("offset") int offset,@Path("at") String at);
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @GET("fareproducts/{fareProductId}/faretables/{fareTableId}?limit={limit}&offset={offset}&at={at}")
-        Call<FareTable> getFareTableByID(@Path("fareProductId") String fareProductId,@Path("fareTableId") String fareTableId, @Path("limit") int limit,@Path("offset") int offset,@Path("at") String at);
-
-
-        @Headers({
-                "Accept: application/json",
-                "Content-Type: application/json"
-        })
-        @POST("journeys")
-        Call<Journey> getJourney(@Body JourneyPOST journey);
-    }*/
 }

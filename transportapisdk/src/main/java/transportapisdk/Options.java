@@ -1,5 +1,6 @@
 package transportapisdk;
 
+import java.util.ArrayList;
 import java.util.List;
 
 abstract class Options 
@@ -9,10 +10,10 @@ abstract class Options
 	protected final static List<String> defaultAgencies = null;
 	protected final static String defaultExclude = null;
 	
-	List<String> agencies;
-	Integer limit;
-	Integer offset;
-	String exclude;
+	public List<String> agencies;
+	public Integer limit;
+	public Integer offset;
+	public String exclude;
 	
 	public Options (List<String> onlyAgencies, List<String> omitAgencies, int limit, int offset, String exclude)
 	{
@@ -31,8 +32,19 @@ abstract class Options
 			throw new IllegalArgumentException("Invalid offset. Valid values are positive numbers only.");
 		}
 		
-		this.agencies = onlyAgencies;
-		this.agencies = omitAgencies;
+		if (onlyAgencies != null)
+			this.agencies = onlyAgencies;
+		if (omitAgencies != null)
+		{
+			List <String> agencies = new ArrayList<String>();
+			for (String agency : omitAgencies) 
+			{
+				agencies.add("~" + agency);
+			} 
+			
+			this.agencies = agencies;
+		}
+		
 		this.limit = limit;
 		this.offset = offset;
 		this.exclude = exclude;

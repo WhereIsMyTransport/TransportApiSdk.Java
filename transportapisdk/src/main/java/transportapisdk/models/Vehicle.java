@@ -1,6 +1,5 @@
 package transportapisdk.models;
 
-
 public class Vehicle {
 
     private String designation;

@@ -1,5 +1,7 @@
 package transportapisdk.models;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class Stop {
 
@@ -7,7 +9,10 @@ public class Stop {
     private String href;
     private Agency agency;
     private String name;
+    private String code;
     private Point geometry;
+    private List<String> modes = new ArrayList<String>();
+    private Stop parentStop;
 
     /**
      * 
@@ -80,6 +85,24 @@ public class Stop {
     public void setName(String name) {
         this.name = name;
     }
+    
+    /**
+     * 
+     * @return
+     *     The code
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * 
+     * @param code
+     *     The code
+     */
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     /**
      * 
@@ -98,5 +121,40 @@ public class Stop {
     public void setGeometry(Point geometry) {
         this.geometry = geometry;
     }
+    
+    /**
+     * 
+     * @return
+     *     The modes
+     */
+    public List<String> getModes() {
+        return modes;
+    }
 
+    /**
+     * 
+     * @param modes
+     *     The modes
+     */
+    public void setModes(List<String> modes) {
+        this.modes = modes;
+    }
+
+    /**
+     * 
+     * @return
+     *     The parentStop
+     */
+    public Stop getParentStop() {
+        return parentStop;
+    }
+
+    /**
+     * 
+     * @param parentStop
+     *     The parentStop
+     */
+    public void setParentStop(Stop parentStop) {
+        this.parentStop = parentStop;
+    }
 }

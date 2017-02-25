@@ -6,6 +6,9 @@ public class Waypoint {
     private String arrivalTime;
     private String departureTime;
     private Location location;
+    private Hail hail;
+    private String pickupType;
+    private String dropOffType;
 
     /**
      * 
@@ -60,6 +63,42 @@ public class Waypoint {
     public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
+    
+    /**
+     * 
+     * @return
+     *     The pickupType
+     */
+    public String getPickupType() {
+        return pickupType;
+    }
+
+    /**
+     * 
+     * @param pickupType
+     *     The pickupType
+     */
+    public void setPickupType(String pickupType) {
+        this.pickupType = pickupType;
+    }
+    
+    /**
+     * 
+     * @return
+     *     The dropOffType
+     */
+    public String getDropOffType() {
+        return dropOffType;
+    }
+
+    /**
+     * 
+     * @param dropOffType
+     *     The dropOffType
+     */
+    public void setDropOffType(String dropOffType) {
+        this.dropOffType = dropOffType;
+    }
 
     /**
      * 
@@ -77,6 +116,24 @@ public class Waypoint {
      */
     public void setLocation(Location location) {
         this.location = location;
+    }
+    
+    /**
+     * 
+     * @return
+     *     The hail
+     */
+    public Hail getHail() {
+        return hail;
+    }
+
+    /**
+     * 
+     * @param hail
+     *     The hail
+     */
+    public void setHail(Hail hail) {
+        this.hail = hail;
     }
 
 }

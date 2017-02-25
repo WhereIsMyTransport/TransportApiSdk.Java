@@ -7,6 +7,7 @@ public class Line {
     private Agency agency;
     private String name;
     private String shortName;
+    private String description;
     private String mode;
     private String colour;
     private String textColour;
@@ -100,6 +101,24 @@ public class Line {
     public void setShortName(String shortName) {
         this.shortName = shortName;
     }
+    
+    /**
+    *
+    * @return
+    * The description
+    */
+   public String getDescription() {
+       return description;
+   }
+
+   /**
+    *
+    * @param description
+    * The description
+    */
+   public void setDescription(String description) {
+       this.description = description;
+   }
 
     /**
      *

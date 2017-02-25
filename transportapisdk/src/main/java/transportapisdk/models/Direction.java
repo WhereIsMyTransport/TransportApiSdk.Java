@@ -1,6 +1,5 @@
 package transportapisdk.models;
 
-
 public class Direction {
 
     private String instruction;

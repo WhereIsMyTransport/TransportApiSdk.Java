@@ -1,10 +1,6 @@
 
 package transportapisdk.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class FareProduct {
 
     private String id;
@@ -12,7 +8,7 @@ public class FareProduct {
     private String name;
     private boolean isDefault;
     private String description;
-    private List<Object> restrictions = new ArrayList<Object>();
+    private Agency agency;
 
     /**
      * 
@@ -107,19 +103,19 @@ public class FareProduct {
     /**
      * 
      * @return
-     *     The restrictions
+     *     The agency
      */
-    public List<Object> getRestrictions() {
-        return restrictions;
+    public Agency getAgency() {
+        return agency;
     }
 
     /**
      * 
-     * @param restrictions
-     *     The restrictions
+     * @param agency
+     *     The agency
      */
-    public void setRestrictions(List<Object> restrictions) {
-        this.restrictions = restrictions;
+    public void setAgency(Agency agency) {
+        this.agency = agency;
     }
 
 }
