@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import transportapisdk.models.Itinerary;
 import transportapisdk.models.Journey;
 
 public class JourneyTests 
@@ -21,21 +22,25 @@ public class JourneyTests
 	private static double defaultEndLongitude = 18.389256;
 	
 	private static String defaultOmitMode = "Bus";
+	private static String defaultNoExcludes = "";
+	private static String defaultPreviouslyRequestedJourneyId = "TMlaXft1-0qX1acmAJKDnA";
+	private static String defaultPrevioulsyRequestedItineraryId = "IO5_2h30eU-Ij6cmAJKFPg";
+	
 	private static List<String> defaultOmitedModes = new ArrayList<String>(Arrays.asList(defaultOmitMode));
 	
 	
 	@Test
-	public void Journey_DefaultValues_IsSuccess() 
+	public void PostJourney_DefaultValues_IsSuccess() 
 	{
-		Journey journey = client.PostJourney(null, defaultStartLatitude, defaultStartLongitude, defaultEndLatitude, defaultEndLongitude);
+		Journey journey = client.PostJourney(null, defaultStartLatitude, defaultStartLongitude, defaultEndLatitude, defaultEndLongitude, defaultNoExcludes);
 		
 		assertTrue(journey.getId() != null);
 	}
 	
 	@Test
-	public void Journey_OmitBus_IsSuccess() 
+	public void PostJourney_OmitBus_IsSuccess() 
 	{
-		JourneyOptions options = new JourneyOptions(null, 
+		JourneyBodyOptions options = new JourneyBodyOptions(
 				null, 
 				null, 
 				null, 
@@ -43,10 +48,26 @@ public class JourneyTests
 				null,
 				null);
 		
-		Journey journey = client.PostJourney(options, defaultStartLatitude, defaultStartLongitude, defaultEndLatitude, defaultEndLongitude);
+		Journey journey = client.PostJourney(options, defaultStartLatitude, defaultStartLongitude, defaultEndLatitude, defaultEndLongitude, defaultNoExcludes);
 		
 		assertTrue(journey.getId() != null);
 		assertTrue(journey.getOmit().getModes().contains(defaultOmitMode));
+	}
+	
+	@Test
+	public void GetJourney_DefaultValues_IsSuccess() 
+	{
+		Journey journey = client.GetJourney(defaultPreviouslyRequestedJourneyId, defaultNoExcludes);
+		
+		assertTrue(journey.getId().equals(defaultPreviouslyRequestedJourneyId));
+	}
+	
+	@Test
+	public void GetItinerary_DefaultValues_IsSuccess() 
+	{
+		Itinerary itinerary = client.GetItinerary(defaultPreviouslyRequestedJourneyId, defaultPrevioulsyRequestedItineraryId, defaultNoExcludes);
+		
+		assertTrue(itinerary.getId().equals(defaultPrevioulsyRequestedItineraryId));
 	}
 
 }

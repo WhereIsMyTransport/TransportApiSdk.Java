@@ -82,8 +82,8 @@ public class Journey {
 
   /**
    *
-   * @param time
-   * The time
+   * @param timeType
+   * The timeType
    */
   public void setTimeType(TimeType timeType) {
       this.timeType = timeType;
@@ -208,7 +208,7 @@ public class Journey {
 
   /**
    *
-   * @param only
+   * @param omit
    * The objects omitted from the call.
    */
   public void setOmit(Omit omit) {

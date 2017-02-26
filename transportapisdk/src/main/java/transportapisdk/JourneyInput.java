@@ -2,16 +2,16 @@ package transportapisdk;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import transportapisdk.models.MultiPoint;
 import transportapisdk.models.Omit;
 import transportapisdk.models.Only;
 import transportapisdk.models.Profile;
 import transportapisdk.models.TimeType;
 
+@SuppressWarnings("unused")
 class JourneyInput {
 
-    private MultiPoint geometry;
+	private MultiPoint geometry;
     private String time;
     private TimeType timeType;
     private Profile profile;

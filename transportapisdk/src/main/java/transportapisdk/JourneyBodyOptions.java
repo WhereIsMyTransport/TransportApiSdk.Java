@@ -4,11 +4,12 @@ import java.util.List;
 import transportapisdk.models.Profile;
 import transportapisdk.models.TimeType;
 
-public class JourneyOptions extends Options
+public class JourneyBodyOptions
 {
-	protected final static List<String> defaultModes = null;
-	protected final static List<String> defaultFareProducts = null;
-	protected final static int defaultMaxItineraries = 3;
+	private final static List<String> defaultModes = null;
+	private final static List<String> defaultAgencies = null;
+	private final static List<String> defaultFareProducts = null;
+	private final static int defaultMaxItineraries = 3;
 	
 	public List<String> onlyAgencies = null;
 	public List<String> omitAgencies = null;
@@ -20,20 +21,22 @@ public class JourneyOptions extends Options
 	public Profile profile;
 	public int maxItineraries;
 	
-	public JourneyOptions(
+	public JourneyBodyOptions(
 			List<String> onlyAgencies, 
-			List<String> omitAgencies, 
-			String exclude, 
+			List<String> omitAgencies,  
 			List<String> onlyModes, 
 			List<String> omitModes, 
 			Integer maxItineraries,
 			List<String> fareProducts) 
-	{
-		super(onlyAgencies, omitAgencies, defaultLimit, defaultOffset, exclude);
-		
+	{	
 		if (onlyModes != null & omitModes != null)
 		{
 			throw new IllegalArgumentException("Either onlyModes or omitModes can be provided. Not both.");
+		}
+		
+		if (onlyAgencies != null & omitAgencies != null)
+		{
+			throw new IllegalArgumentException("Either onlyAgencies or omitAgencies can be provided. Not both.");
 		}
 		
 		if (maxItineraries != null && (maxItineraries < 1 || maxItineraries > 5))
@@ -59,8 +62,8 @@ public class JourneyOptions extends Options
 			this.maxItineraries = defaultMaxItineraries;
 	}
 	
-	public static JourneyOptions Default()
+	public static JourneyBodyOptions Default()
 	{
-		return new JourneyOptions(defaultAgencies, defaultAgencies, defaultExclude, defaultModes, defaultModes, defaultMaxItineraries, defaultFareProducts);
+		return new JourneyBodyOptions(defaultAgencies, defaultAgencies, defaultModes, defaultModes, defaultMaxItineraries, defaultFareProducts);
 	}
 }

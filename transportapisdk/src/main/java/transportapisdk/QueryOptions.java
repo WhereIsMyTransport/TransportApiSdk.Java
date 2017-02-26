@@ -3,19 +3,21 @@ package transportapisdk;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract class Options 
+abstract class QueryOptions 
 {
 	protected final static int defaultLimit = 100;
 	protected final static int defaultOffset = 0;
 	protected final static List<String> defaultAgencies = null;
 	protected final static String defaultExclude = null;
+	protected final static List<String> defaultModes = null;
 	
-	public List<String> agencies;
+	public List<String> agencies = null;
+	public List<String> modes = null;
 	public Integer limit;
 	public Integer offset;
 	public String exclude;
 	
-	public Options (List<String> onlyAgencies, List<String> omitAgencies, int limit, int offset, String exclude)
+	public QueryOptions (List<String> onlyAgencies, List<String> omitAgencies, List<String> onlyModes, List<String> omitModes, int limit, int offset, String exclude)
 	{
 		if (onlyAgencies != null & omitAgencies != null)
 		{
@@ -43,6 +45,19 @@ abstract class Options
 			} 
 			
 			this.agencies = agencies;
+		}
+		
+		if (onlyModes != null)
+			this.modes = onlyModes;
+		if (omitModes != null)
+		{
+			List <String> modes = new ArrayList<String>();
+			for (String mode : omitModes) 
+			{
+				modes.add("~" + mode);
+			} 
+			
+			this.modes = modes;
 		}
 		
 		this.limit = limit;

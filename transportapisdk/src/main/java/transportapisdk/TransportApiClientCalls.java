@@ -18,6 +18,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import transportapisdk.models.*;
 
@@ -34,22 +35,82 @@ interface ITransportApi
         "Accept: application/json",
         "Content-Type: application/json"
 	})
+	@GET("journeys/{journeyId}")
+	Call<Journey> GetJourney(@Path("journeyId") String journeyId, @Query("exclude") String exclude);
+
+	@Headers({
+        "Accept: application/json",
+        "Content-Type: application/json"
+	})
+	@GET("journeys/{journeyId}/itineraries/{itineraryId}")
+	Call<Itinerary> GetItinerary(@Path("journeyId") String journeyId, @Path("itineraryId") String itineraryId, @Query("exclude") String exclude);
+
+	@Headers({
+        "Accept: application/json",
+        "Content-Type: application/json"
+	})
 	@GET("agencies")
 	Call<List<Agency>> GetAgencies(@Query("agencies") List<String> agencies, @Query("limit") int limit, @Query("offset") int offset, @Query("point") Point point, @Query("radius") Integer radius, @Query("bbox") String bbox, @Query("exclude") String exclude);
+
+	@Headers({
+        "Accept: application/json",
+        "Content-Type: application/json"
+	})
+	@GET("agencies/{agencyId}")
+	Call<Agency> GetAgency(@Path("agencyId") String id);
+	
+	@Headers({
+        "Accept: application/json",
+        "Content-Type: application/json"
+	})
+	@GET("stops")
+	Call<List<Stop>> GetStops(@Query("agencies") List<String> agencies, @Query("modes") List<String> modes, @Query("servesLines") List<String> servesLines, @Query("showChildren") boolean showChildren, @Query("limit") int limit, @Query("offset") int offset, @Query("point") Point point, @Query("radius") Integer radius, @Query("bbox") String bbox, @Query("exclude") String exclude);
+
+
+	@Headers({
+        "Accept: application/json",
+        "Content-Type: application/json"
+	})
+	@GET("stops/{stopId}")
+	Call<Stop> GetStop(@Path("stopId") String stopId);
+
+	@Headers({
+		"Accept: application/json",
+		"Content-Type: application/json"
+	})
+	@GET("lines")
+	Call<List<Line>> GetLines(@Query("agencies") List<String> agencies, @Query("modes") List<String> modes, @Query("servesStops") List<String> servesStops, @Query("limit") int limit, @Query("offset") int offset, @Query("point") Point point, @Query("radius") Integer radius, @Query("bbox") String bbox, @Query("exclude") String exclude);
+
+	@Headers({
+	    "Accept: application/json",
+	    "Content-Type: application/json"
+	})
+	@GET("lines/{lineId}")
+	Call<Line> GetLine(@Path("lineId") String lineId);
+
 }
 
 class TransportApiClientCalls 
 {
-	private final static CountDownLatch latch = new CountDownLatch(1);
+	//private final static CountDownLatch latch = new CountDownLatch(1);
 	
 	// TODO Not the greatest, but these are all the return values for the call-backs to set.
 	private static List<Agency> agencies = null;
+	private static Agency agency = null;
 	private static Journey journey = null;
+	private static Itinerary itinerary = null;
+	private static List<Line> lines = null;
+	private static Line line = null;
+	private static List<Stop> stops = null;
+	private static Stop stop = null;
     
-	public static Journey PostJourney(final TokenComponent tokenComponent, JourneyOptions options, Point start, Point end)
+	public static Journey PostJourney(final TokenComponent tokenComponent, JourneyBodyOptions options, Point start, Point end, String exclude)
     {
+		final CountDownLatch latch = new CountDownLatch(1);
+		
 		ITransportApi service = GetTransportApiClient(tokenComponent);
         
+		@SuppressWarnings("unchecked")
 		MultiPoint geometry = new MultiPoint(Arrays.asList(start.getCoordinatesList(), end.getCoordinatesList()));
 		
 		JourneyInput inputModel = new JourneyInput(
@@ -64,7 +125,7 @@ class TransportApiClientCalls
 	    		options.maxItineraries,
 	    		options.fareProducts);
 		
-        Call<Journey> call = service.PostJourney(inputModel, options.exclude);
+        Call<Journey> call = service.PostJourney(inputModel, exclude);
         
         call.enqueue(new Callback<Journey>() {
             public void onResponse(Call<Journey> call, Response<Journey> response) {
@@ -92,8 +153,78 @@ class TransportApiClientCalls
         return journey;
     }
 	
-	public static List<Agency> GetAgencies(final TokenComponent tokenComponent, AgencyOptions options, Point point, Integer radiusInMeters, String boundingBox)
+	public static Journey GetJourney(final TokenComponent tokenComponent, String journeyId, String exclude)
     {
+		final CountDownLatch latch = new CountDownLatch(1);
+		
+    	ITransportApi service = GetTransportApiClient(tokenComponent);
+        
+        Call<Journey> call = service.GetJourney(journeyId, exclude);
+        
+        call.enqueue(new Callback<Journey>() {
+            public void onResponse(Call<Journey> call, Response<Journey> response) {
+            	journey = response.body();
+
+                latch.countDown();
+            }
+
+            public void onFailure(Call<Journey> call, Throwable t) {
+                System.out.print("TODO - Failed on GetAccessToken");
+                
+                latch.countDown();
+            }
+        });
+        
+        try
+        {
+           latch.await();
+        }
+        catch (InterruptedException e)
+        {
+        	System.out.print("TODO - Failed during latch await.");
+        }
+
+        return journey;
+    }
+	
+	public static Itinerary GetItinerary(final TokenComponent tokenComponent, String journeyId, String itineraryId, String exclude)
+    {
+		final CountDownLatch latch = new CountDownLatch(1);
+		
+    	ITransportApi service = GetTransportApiClient(tokenComponent);
+        
+        Call<Itinerary> call = service.GetItinerary(journeyId, itineraryId, exclude);
+        
+        call.enqueue(new Callback<Itinerary>() {
+            public void onResponse(Call<Itinerary> call, Response<Itinerary> response) {
+            	itinerary = response.body();
+
+                latch.countDown();
+            }
+
+            public void onFailure(Call<Itinerary> call, Throwable t) {
+                System.out.print("TODO - Failed on GetAccessToken");
+                
+                latch.countDown();
+            }
+        });
+        
+        try
+        {
+           latch.await();
+        }
+        catch (InterruptedException e)
+        {
+        	System.out.print("TODO - Failed during latch await.");
+        }
+
+        return itinerary;
+    }
+	
+	public static List<Agency> GetAgencies(final TokenComponent tokenComponent, AgencyQueryOptions options, Point point, Integer radiusInMeters, String boundingBox)
+    {
+		final CountDownLatch latch = new CountDownLatch(1);
+		
     	ITransportApi service = GetTransportApiClient(tokenComponent);
         
         Call<List<Agency>> call = service.GetAgencies(options.agencies, options.limit, options.offset, point, radiusInMeters, boundingBox, options.exclude);
@@ -124,6 +255,176 @@ class TransportApiClientCalls
         return agencies;
     }
     
+	public static Agency GetAgency(final TokenComponent tokenComponent, String agencyId)
+    {
+		final CountDownLatch latch = new CountDownLatch(1);
+		
+    	ITransportApi service = GetTransportApiClient(tokenComponent);
+        
+        Call<Agency> call = service.GetAgency(agencyId);
+        
+        call.enqueue(new Callback<Agency>() {
+            public void onResponse(Call<Agency> call, Response<Agency> response) {
+            	agency = response.body();
+
+                latch.countDown();
+            }
+
+            public void onFailure(Call<Agency> call, Throwable t) {
+                System.out.print("TODO - Failed on GetAccessToken");
+                
+                latch.countDown();
+            }
+        });
+        
+        try
+        {
+           latch.await();
+        }
+        catch (InterruptedException e)
+        {
+        	System.out.print("TODO - Failed during latch await.");
+        }
+
+        return agency;
+    }
+	
+	public static List<Line> GetLines(final TokenComponent tokenComponent, LineQueryOptions options, Point point, Integer radiusInMeters, String boundingBox)
+    {
+		final CountDownLatch latch = new CountDownLatch(1);
+		
+    	ITransportApi service = GetTransportApiClient(tokenComponent);
+        
+        Call<List<Line>> call = service.GetLines(options.agencies, options.modes, options.servesStops, options.limit, options.offset, point, radiusInMeters, boundingBox, options.exclude);
+        
+        call.enqueue(new Callback<List<Line>>() {
+            public void onResponse(Call<List<Line>> call, Response<List<Line>> response) {
+            	lines = response.body();
+
+                latch.countDown();
+            }
+
+            public void onFailure(Call<List<Line>> call, Throwable t) {
+                System.out.print("TODO - Failed on GetAccessToken");
+                
+                latch.countDown();
+            }
+        });
+        
+        try
+        {
+           latch.await();
+        }
+        catch (InterruptedException e)
+        {
+        	System.out.print("TODO - Failed during latch await.");
+        }
+
+        return lines;
+    }
+    
+	public static Line GetLine(final TokenComponent tokenComponent, String lineId)
+    {
+		final CountDownLatch latch = new CountDownLatch(1);
+		
+    	ITransportApi service = GetTransportApiClient(tokenComponent);
+        
+        Call<Line> call = service.GetLine(lineId);
+        
+        call.enqueue(new Callback<Line>() {
+            public void onResponse(Call<Line> call, Response<Line> response) {
+            	line = response.body();
+
+                latch.countDown();
+            }
+
+            public void onFailure(Call<Line> call, Throwable t) {
+                System.out.print("TODO - Failed on GetAccessToken");
+                
+                latch.countDown();
+            }
+        });
+        
+        try
+        {
+           latch.await();
+        }
+        catch (InterruptedException e)
+        {
+        	System.out.print("TODO - Failed during latch await.");
+        }
+
+        return line;
+    }
+	
+	public static List<Stop> GetStops(final TokenComponent tokenComponent, StopQueryOptions options, Point point, Integer radiusInMeters, String boundingBox)
+    {
+		final CountDownLatch latch = new CountDownLatch(1);
+		
+    	ITransportApi service = GetTransportApiClient(tokenComponent);
+        
+        Call<List<Stop>> call = service.GetStops(options.agencies, options.modes, options.servesLines, options.showChildren, options.limit, options.offset, point, radiusInMeters, boundingBox, options.exclude);
+        
+        call.enqueue(new Callback<List<Stop>>() {
+            public void onResponse(Call<List<Stop>> call, Response<List<Stop>> response) {
+            	stops = response.body();
+
+                latch.countDown();
+            }
+
+            public void onFailure(Call<List<Stop>> call, Throwable t) {
+                System.out.print("TODO - Failed on GetAccessToken");
+                
+                latch.countDown();
+            }
+        });
+        
+        try
+        {
+           latch.await();
+        }
+        catch (InterruptedException e)
+        {
+        	System.out.print("TODO - Failed during latch await.");
+        }
+
+        return stops;
+    }
+    
+	public static Stop GetStop(final TokenComponent tokenComponent, String stopId)
+    {
+		final CountDownLatch latch = new CountDownLatch(1);
+		
+    	ITransportApi service = GetTransportApiClient(tokenComponent);
+        
+        Call<Stop> call = service.GetStop(stopId);
+        
+        call.enqueue(new Callback<Stop>() {
+            public void onResponse(Call<Stop> call, Response<Stop> response) {
+            	stop = response.body();
+
+                latch.countDown();
+            }
+
+            public void onFailure(Call<Stop> call, Throwable t) {
+                System.out.print("TODO - Failed on GetAccessToken");
+                
+                latch.countDown();
+            }
+        });
+        
+        try
+        {
+           latch.await();
+        }
+        catch (InterruptedException e)
+        {
+        	System.out.print("TODO - Failed during latch await.");
+        }
+
+        return stop;
+    }
+	
     private static ITransportApi GetTransportApiClient(final TokenComponent tokenComponent)
     {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -159,27 +460,7 @@ class TransportApiClientCalls
 
 
 /*
-@Headers({
-        "Accept: application/json",
-        "Content-Type: application/json"
-})
-@GET("agencies/{agencyId}?at={at}")
-Call<Agency>  getAgencyByID(@Path("agencyId") String id,@Path("at") String at);
 
-@Headers({
-        "Accept: application/json",
-        "Content-Type: application/json"
-})
-@GET("stops?point={point}&radius={radius}&bbox={bbox}&modes={modes}&agencies={agencies}&servesLines={lineIds}&limit={limit}&offset={offset}&at={at}")
-Call<List<Stop>> getStops(@Path("point") Point point,@Path("radius") int radius,@Path("bbox") List<String> bbox,@Path("modes") List<String> modes,@Path("agencies") List<String> agencies,@Path("servesLine") String servesLine,@Path("limit") int limit,@Path("offset") int offset,@Path("at") String at);
-
-
-@Headers({
-        "Accept: application/json",
-        "Content-Type: application/json"
-})
-@GET("stops/{stopId}?at={at}")
-Call<Stop> getStopByID(@Path("stopId") String stopId,@Path("at") String at);
 
 @Headers({
         "Accept: application/json",
@@ -188,19 +469,7 @@ Call<Stop> getStopByID(@Path("stopId") String stopId,@Path("at") String at);
 @GET("stops/{stopId}/timetables?earliestArrivalTime={earliestArrivalTime}&limit={limit}&at={at}")
 Call<StopTimetable> getStopTimetable(@Path("stopId") String stopId,@Path("earliestArrivalTime") String earliestArrivalTime,@Path("limit") int limit,@Path("at") String at);
 
-@Headers({
-        "Accept: application/json",
-        "Content-Type: application/json"
-})
-@GET("lines?agencies={agencies}&servesStops={servesStops}&limit={limit}&offset={offset}&at={at}")
-Call<List<Line>> getLines(@Path("agencies") List<String> agencies,@Path("servesStops") String servesStops,@Path("limit") int limit,@Path("offset") int offset,@Path("at") String at);
 
-@Headers({
-        "Accept: application/json",
-        "Content-Type: application/json"
-})
-@GET("lines/{lineId}?at={at}")
-Call<Line> getLineByID(@Path("lineId") String lineId);
 
 
 @Headers({
@@ -217,26 +486,6 @@ Call<LineTimetable> getLineTimetable(@Path("lineId") String lineId,@Path("earlie
 @GET("lines/{lineId}/shape?at={at}")
 Call<LineShape> getLineShape(@Path("lineId") String lineId,@Path("at") String at);
 
-@Headers({
-        "Accept: application/json",
-        "Content-Type: application/json"
-})
-@GET("journeys/{journeyId}?fareproducts={fareProductIds}")
-Call<Journey> getJourneyByID(@Path("journeyId") String journeyId,@Path("fareproducts") String fareProducts);
-
-@Headers({
-        "Accept: application/json",
-        "Content-Type: application/json"
-})
-@GET("journeys/{journeyId}/itineraries/{itineraryId}?fareproducts={fareProductIds}")
-Call<Itinerary> getItineraryByID(@Path("journeyId") String journeyId,@Path("itineraryId") String itineraryId,@Path("fareProductIds") List<String> fareProducts);
-
-@Headers({
-        "Accept: application/json",
-        "Content-Type: application/json"
-})
-@GET("journeys/{journeyId}/itineraries?fareproducts={fareProductIds}")
-Call<Itinerary> getItineraryWithApplicationOfFareProduct(@Path("journeyId") String journeyId,@Path("fareProductIds") List<String> fareProductIds);
 
 @Headers({
         "Accept: application/json",

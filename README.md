@@ -25,7 +25,15 @@ List<Agency> agencies = client.GetAgencies();
 
 The following end-points are available:
 
+* POST api/journeys
+* GET api/journeys/{id}
+* GET api/journeys/{id}/itineraries/{id}
 * GET api/agencies
+* GET api/agencies/{id}
+* GET api/stops
+* GET api/stops/{id}
+* GET api/lines
+* GET api/lines/{id}
 
 ## Installation
 
