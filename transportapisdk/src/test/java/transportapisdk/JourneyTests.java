@@ -32,9 +32,10 @@ public class JourneyTests
 	@Test
 	public void PostJourney_DefaultValues_IsSuccess() 
 	{
-		Journey journey = client.PostJourney(null, defaultStartLatitude, defaultStartLongitude, defaultEndLatitude, defaultEndLongitude, defaultNoExcludes);
+		TransportApiResult<Journey> journey = client.postJourney(null, defaultStartLatitude, defaultStartLongitude, defaultEndLatitude, defaultEndLongitude, defaultNoExcludes);
 		
-		assertTrue(journey.getId() != null);
+		assertTrue(journey.isSuccess);
+		assertTrue(journey.data.getId() != null);
 	}
 	
 	@Test
@@ -48,26 +49,29 @@ public class JourneyTests
 				null,
 				null);
 		
-		Journey journey = client.PostJourney(options, defaultStartLatitude, defaultStartLongitude, defaultEndLatitude, defaultEndLongitude, defaultNoExcludes);
+		TransportApiResult<Journey> journey = client.postJourney(options, defaultStartLatitude, defaultStartLongitude, defaultEndLatitude, defaultEndLongitude, defaultNoExcludes);
 		
-		assertTrue(journey.getId() != null);
-		assertTrue(journey.getOmit().getModes().contains(defaultOmitMode));
+		assertTrue(journey.isSuccess);
+		assertTrue(journey.data.getId() != null);
+		assertTrue(journey.data.getOmit().getModes().contains(defaultOmitMode));
 	}
 	
 	@Test
 	public void GetJourney_DefaultValues_IsSuccess() 
 	{
-		Journey journey = client.GetJourney(defaultPreviouslyRequestedJourneyId, defaultNoExcludes);
+		TransportApiResult<Journey> journey = client.getJourney(defaultPreviouslyRequestedJourneyId, defaultNoExcludes);
 		
-		assertTrue(journey.getId().equals(defaultPreviouslyRequestedJourneyId));
+		assertTrue(journey.isSuccess);
+		assertTrue(journey.data.getId().equals(defaultPreviouslyRequestedJourneyId));
 	}
 	
 	@Test
 	public void GetItinerary_DefaultValues_IsSuccess() 
 	{
-		Itinerary itinerary = client.GetItinerary(defaultPreviouslyRequestedJourneyId, defaultPrevioulsyRequestedItineraryId, defaultNoExcludes);
+		TransportApiResult<Itinerary> itinerary = client.getItinerary(defaultPreviouslyRequestedJourneyId, defaultPrevioulsyRequestedItineraryId, defaultNoExcludes);
 		
-		assertTrue(itinerary.getId().equals(defaultPrevioulsyRequestedItineraryId));
+		assertTrue(itinerary.isSuccess);
+		assertTrue(itinerary.data.getId().equals(defaultPrevioulsyRequestedItineraryId));
 	}
 
 }

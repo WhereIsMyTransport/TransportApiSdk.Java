@@ -2,8 +2,9 @@ package transportapisdk;
 
 public class TransportApiClientSettings 
 {
-	public String ClientId;
-	public String ClientSecret;
+	public String clientId;
+	public String clientSecret;
+	public int timeoutInSeconds;
     
     public TransportApiClientSettings(String clientId, String clientSecret)
     {
@@ -17,7 +18,20 @@ public class TransportApiClientSettings
     		throw new IllegalArgumentException("ClientSecret cannot be null.");
     	}
     	
-    	this.ClientId = clientId;
-    	this.ClientSecret = clientSecret;
+    	this.timeoutInSeconds = 30;
+    	this.clientId = clientId;
+    	this.clientSecret = clientSecret;
+    }
+    
+    public TransportApiClientSettings(String clientId, String clientSecret, int timeoutInSeconds)
+    {
+    	this(clientId, clientSecret);
+    	
+    	if (timeoutInSeconds <= 0 || timeoutInSeconds > 60)
+    	{
+    		throw new IllegalArgumentException("TimeoutInSeconds must be between 0 and 61.");
+    	}
+    	
+    	this.timeoutInSeconds = timeoutInSeconds;
     }
 }

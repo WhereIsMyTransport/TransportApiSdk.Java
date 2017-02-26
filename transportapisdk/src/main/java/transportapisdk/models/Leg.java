@@ -1,9 +1,7 @@
 package transportapisdk.models;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Leg {
 
@@ -17,8 +15,6 @@ public class Leg {
     private List<Waypoint> waypoints = new ArrayList<Waypoint>();
     private List<Direction> directions = new ArrayList<Direction>();
     private LineString geometry;
-    
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      *
@@ -199,13 +195,4 @@ public class Leg {
     public void setFare(Fare fare) {
         this.fare = fare;
     }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
 }

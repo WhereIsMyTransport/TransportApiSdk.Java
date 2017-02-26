@@ -21,33 +21,37 @@ public class AgencyTests {
 	@Test
 	public void Agencies_DefaultValues_IsSuccess() {
 		
-		List<Agency> agencies = client.GetAgencies(AgencyQueryOptions.Default());
+		TransportApiResult<List<Agency>> agencies = client.getAgencies(AgencyQueryOptions.defaultQueryOptions());
 		
-		assertTrue(agencies.size() > 0);
+		assertTrue(agencies.isSuccess);
+		assertTrue(agencies.data.size() > 0);
 	}
 	
 	@Test
 	public void AgenciesNearby_DefaultValues_IsSuccess() {
 		
-		List<Agency> agenciesNearby = client.GetAgenciesNearby(AgencyQueryOptions.Default(), defaultLatitude, defaultLongitude, defaultRadiusInMeters);
+		TransportApiResult<List<Agency>> agenciesNearby = client.getAgenciesNearby(AgencyQueryOptions.defaultQueryOptions(), defaultLatitude, defaultLongitude, defaultRadiusInMeters);
 		
-		assertTrue(agenciesNearby.size() > 0);
+		assertTrue(agenciesNearby.isSuccess);
+		assertTrue(agenciesNearby.data.size() > 0);
 	}
 	
 	@Test
 	public void AgenciesByBoundingBox_DefaultValues_IsSuccess() {
 		
-		List<Agency> agenciesNearby = client.GetAgenciesByBoundingBox(AgencyQueryOptions.Default(), defaultBoundingBox);
+		TransportApiResult<List<Agency>> agenciesNearby = client.getAgenciesByBoundingBox(AgencyQueryOptions.defaultQueryOptions(), defaultBoundingBox);
 		
-		assertTrue(agenciesNearby.size() > 0);
+		assertTrue(agenciesNearby.isSuccess);
+		assertTrue(agenciesNearby.data.size() > 0);
 	}
 	
 	@Test
 	public void Agency_DefaultValues_IsSuccess() {
 		
-		Agency agency = client.GetAgency(defaultAgencyId);
+		TransportApiResult<Agency> agency = client.getAgency(defaultAgencyId);
 		
-		assertTrue(agency.getId().equals(defaultAgencyId));
+		assertTrue(agency.isSuccess);
+		assertTrue(agency.data.getId().equals(defaultAgencyId));
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 public class TransportApiClient {
 	
 	private TokenComponent tokenComponent;
+	private int timeoutInSeconds;
 
     public TransportApiClient(TransportApiClientSettings settings)
     {
@@ -14,28 +15,29 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Settings cannot be null.");
     	}
     	
-    	this.tokenComponent = new TokenComponent(settings.ClientId, settings.ClientSecret);
+    	this.timeoutInSeconds = settings.timeoutInSeconds;
+    	this.tokenComponent = new TokenComponent(settings.clientId, settings.clientSecret);
     }
     
     /**
      * Gets a list of agencies nearby ordered by distance from the point specified.
      *
-     * @param  options  		Options to limit the results by. Default: JourneyBodyOptions.Default()
+     * @param  options  		Options to limit the results by. Default: JourneyBodyOptions.defaultQueryOptions()
      * @param  startLatitude	Latitude in decimal degrees to depart from.
      * @param  startLongitude	Longitude in decimal degrees to depart from.
      * @param  endLatitude		Latitude in decimal degrees of the desitnation.
      * @param  endLongitude		Longitude in decimal degrees of the desitnation.
      * @param  exclude			Entities to exclude from the call to reduce the payload. See https://developer.whereismytransport.com/documentation#excluding-data
-     * @return      			A journey from A to B using public transport.
+     * @return      			A journey from A to B using public TransportApiResult<transport.
      */
-    public Journey PostJourney(JourneyBodyOptions options, double startLatitude, double startLongitude, double endLatitude, double endLongitude, String exclude)
+    public TransportApiResult<Journey> postJourney(JourneyBodyOptions options, double startLatitude, double startLongitude, double endLatitude, double endLongitude, String exclude)
     {
     	if (options == null)
     	{
-    		options = JourneyBodyOptions.Default();
+    		options = JourneyBodyOptions.defaultQueryOptions();
     	}
     	
-    	return TransportApiClientCalls.PostJourney(tokenComponent, options, new Point(startLongitude, startLatitude), new Point(endLongitude, endLatitude), exclude);
+    	return TransportApiClientCalls.postJourney(tokenComponent, timeoutInSeconds, options, new Point(startLongitude, startLatitude), new Point(endLongitude, endLatitude), exclude);
     }
     
     /**
@@ -45,14 +47,14 @@ public class TransportApiClient {
      * @param  exclude  	Entities to exclude from the call to reduce the payload. See https://developer.whereismytransport.com/documentation#excluding-data
      * @return      		A previously requested journey.
      */
-    public Journey GetJourney(String journeyId, String exclude)
+    public TransportApiResult<Journey> getJourney(String journeyId, String exclude)
     {
-    	if (journeyId == null || journeyId.isEmpty())
+    	if (Extensions.isNullOrWhiteSpace(journeyId))
     	{
     		throw new IllegalArgumentException("JourneyId is required.");
     	}
     	
-    	return TransportApiClientCalls.GetJourney(tokenComponent, journeyId, exclude);
+    	return TransportApiClientCalls.getJourney(tokenComponent, timeoutInSeconds, journeyId, exclude);
     }
     
     /**
@@ -63,51 +65,51 @@ public class TransportApiClient {
      * @param  exclude  	Entities to exclude from the call to reduce the payload. See https://developer.whereismytransport.com/documentation#excluding-data
      * @return      		A previously requested itinerary.
      */
-    public Itinerary GetItinerary(String journeyId, String itineraryId, String exclude)
+    public TransportApiResult<Itinerary> getItinerary(String journeyId, String itineraryId, String exclude)
     {
-    	if (journeyId == null || journeyId.isEmpty())
+    	if (Extensions.isNullOrWhiteSpace(journeyId))
     	{
     		throw new IllegalArgumentException("JourneyId is required.");
     	}
     	
-    	if (itineraryId == null || itineraryId.isEmpty())
+    	if (Extensions.isNullOrWhiteSpace(itineraryId))
     	{
     		throw new IllegalArgumentException("ItineraryId is required.");
     	}
     	
-    	return TransportApiClientCalls.GetItinerary(tokenComponent, journeyId, itineraryId, exclude);
+    	return TransportApiClientCalls.getItinerary(tokenComponent, timeoutInSeconds, journeyId, itineraryId, exclude);
     }
     
     /**
      * Gets a list of all agencies in the system.
      *
-     * @param  options  Options to limit the results by. Default: AgencyQueryOptions.Default()
+     * @param  options  Options to limit the results by. Default: AgencyQueryOptions.defaultQueryOptions()
      * @return      	A list of all agencies.
      */
-    public List<Agency> GetAgencies(AgencyQueryOptions options)
+    public TransportApiResult<List<Agency>> getAgencies(AgencyQueryOptions options)
     {
     	if (options == null)
     	{
-    		options = AgencyQueryOptions.Default();
+    		options = AgencyQueryOptions.defaultQueryOptions();
     	}
     	
-    	return TransportApiClientCalls.GetAgencies(tokenComponent, options, null, null, null);
+    	return TransportApiClientCalls.getAgencies(tokenComponent, timeoutInSeconds, options, null, null, null);
     }
     
     /**
      * Gets a list of agencies nearby ordered by distance from the point specified.
      *
-     * @param  options  		Options to limit the results by. Default: AgencyQueryOptions.Default()
+     * @param  options  		Options to limit the results by. Default: AgencyQueryOptions.defaultQueryOptions()
      * @param  latitude			Latitude in decimal degrees.
      * @param  longitude		Longitude in decimal degrees.
      * @param  radiusInMeters	Radius in meters to filter results by.
      * @return      			A list of agencies nearby the specified point.
      */
-    public List<Agency> GetAgenciesNearby(AgencyQueryOptions options, double latitude, double longitude, int radiusInMeters)
+    public TransportApiResult<List<Agency>> getAgenciesNearby(AgencyQueryOptions options, double latitude, double longitude, int radiusInMeters)
     {
     	if (options == null)
     	{
-    		options = AgencyQueryOptions.Default();
+    		options = AgencyQueryOptions.defaultQueryOptions();
     	}
     	
     	if (radiusInMeters < 0)
@@ -115,21 +117,21 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid limit. Valid values are positive numbers only.");
     	}
     	
-    	return TransportApiClientCalls.GetAgencies(tokenComponent, options, new Point(longitude, latitude), radiusInMeters, null);
+    	return TransportApiClientCalls.getAgencies(tokenComponent, timeoutInSeconds, options, new Point(longitude, latitude), radiusInMeters, null);
     }
     
     /**
      * Gets a list of all agencies within a bounding box.
      *
-     * @param  options  	Options to limit the results by. Default: AgencyQueryOptions.Default()
+     * @param  options  	Options to limit the results by. Default: AgencyQueryOptions.defaultQueryOptions()
      * @param  boundingBox 	The bounding box from where to retrieve agencies. See valid examples here: http://developer.whereismytransport.com/documentation#bounding-box.
      * @return      		A list of agencies within a bounding box.
      */
-    public List<Agency> GetAgenciesByBoundingBox(AgencyQueryOptions options, String boundingBox)
+    public TransportApiResult<List<Agency>> getAgenciesByBoundingBox(AgencyQueryOptions options, String boundingBox)
     {
     	if (options == null)
     	{
-    		options = AgencyQueryOptions.Default();
+    		options = AgencyQueryOptions.defaultQueryOptions();
     	}
     	
     	if (boundingBox == null)
@@ -143,7 +145,7 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid bounding box. See valid examples here: http://developer.whereismytransport.com/documentation#bounding-box.");
     	}
     	
-    	return TransportApiClientCalls.GetAgencies(tokenComponent, options, null, null, boundingBox);
+    	return TransportApiClientCalls.getAgencies(tokenComponent, timeoutInSeconds, options, null, null, boundingBox);
     }
     
     /**
@@ -152,46 +154,46 @@ public class TransportApiClient {
      * @param  agencyId  	The id of the agency you want to get.
      * @return      		An agency.
      */
-    public Agency GetAgency(String agencyId)
+    public TransportApiResult<Agency> getAgency(String agencyId)
     {
-    	if (agencyId == null || agencyId.isEmpty())
+    	if (Extensions.isNullOrWhiteSpace(agencyId))
     	{
     		throw new IllegalArgumentException("AgencyId is required.");
     	}
     	
-    	return TransportApiClientCalls.GetAgency(tokenComponent, agencyId);
+    	return TransportApiClientCalls.getAgency(tokenComponent, timeoutInSeconds, agencyId);
     }
     
     /**
      * Gets a list of all lines in the system.
      *
-     * @param  options  Options to limit the results by. Default: LineQueryOptions.Default()
+     * @param  options  Options to limit the results by. Default: LineQueryOptions.defaultQueryOptions()
      * @return      	A list of all lines.
      */
-    public List<Line> GetLines(LineQueryOptions options)
+    public TransportApiResult<List<Line>> getLines(LineQueryOptions options)
     {
     	if (options == null)
     	{
-    		options = LineQueryOptions.Default();
+    		options = LineQueryOptions.defaultQueryOptions();
     	}
     	
-    	return TransportApiClientCalls.GetLines(tokenComponent, options, null, null, null);
+    	return TransportApiClientCalls.getLines(tokenComponent, timeoutInSeconds, options, null, null, null);
     }
     
     /**
      * Gets a list of lines nearby ordered by distance from the point specified.
      *
-     * @param  options  		Options to limit the results by. Default: LineQueryOptions.Default()
+     * @param  options  		Options to limit the results by. Default: LineQueryOptions.defaultQueryOptions()
      * @param  latitude			Latitude in decimal degrees.
      * @param  longitude		Longitude in decimal degrees.
      * @param  radiusInMeters	Radius in meters to filter results by.
      * @return      			A list of lines nearby the specified point.
      */
-    public List<Line> GetLinesNearby(LineQueryOptions options, double latitude, double longitude, int radiusInMeters)
+    public TransportApiResult<List<Line>> getLinesNearby(LineQueryOptions options, double latitude, double longitude, int radiusInMeters)
     {
     	if (options == null)
     	{
-    		options = LineQueryOptions.Default();
+    		options = LineQueryOptions.defaultQueryOptions();
     	}
     	
     	if (radiusInMeters < 0)
@@ -199,21 +201,21 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid limit. Valid values are positive numbers only.");
     	}
     	
-    	return TransportApiClientCalls.GetLines(tokenComponent, options, new Point(longitude, latitude), radiusInMeters, null);
+    	return TransportApiClientCalls.getLines(tokenComponent, timeoutInSeconds, options, new Point(longitude, latitude), radiusInMeters, null);
     }
     
     /**
      * Gets a list of all lines within a bounding box.
      *
-     * @param  options  	Options to limit the results by. Default: LineQueryOptions.Default()
+     * @param  options  	Options to limit the results by. Default: LineQueryOptions.defaultQueryOptions()
      * @param  boundingBox 	The bounding box from where to retrieve lines. See valid examples here: http://developer.whereismytransport.com/documentation#bounding-box.
      * @return      		A list of lines within a bounding box.
      */
-    public List<Line> GetLinesByBoundingBox(LineQueryOptions options, String boundingBox)
+    public TransportApiResult<List<Line>> getLinesByBoundingBox(LineQueryOptions options, String boundingBox)
     {
     	if (options == null)
     	{
-    		options = LineQueryOptions.Default();
+    		options = LineQueryOptions.defaultQueryOptions();
     	}
     	
     	if (boundingBox == null)
@@ -227,7 +229,7 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid bounding box. See valid examples here: http://developer.whereismytransport.com/documentation#bounding-box.");
     	}
     	
-    	return TransportApiClientCalls.GetLines(tokenComponent, options, null, null, boundingBox);
+    	return TransportApiClientCalls.getLines(tokenComponent, timeoutInSeconds, options, null, null, boundingBox);
     }
     
     /**
@@ -236,46 +238,68 @@ public class TransportApiClient {
      * @param  lineId  	The id of the line you want to get.
      * @return      	An line.
      */
-    public Line GetLine(String lineId)
+    public TransportApiResult<Line> getLine(String lineId)
     {
-    	if (lineId == null || lineId.isEmpty())
+    	if (Extensions.isNullOrWhiteSpace(lineId))
     	{
     		throw new IllegalArgumentException("LineId is required.");
     	}
     	
-    	return TransportApiClientCalls.GetLine(tokenComponent, lineId);
+    	return TransportApiClientCalls.getLine(tokenComponent, timeoutInSeconds, lineId);
+    }
+    
+    /**
+     * Gets a timetable for a specific line.
+     *
+     * @param  stopId  	The id of the line you want to get a timetable for.
+     * @param  options  Options to limit the results by. Default: LineTimetableQueryOptions.defaultQueryOptions()
+     * @return      	The line timetable.
+     */
+    public TransportApiResult<List<LineTimetable>> getLineTimetable(String lineId, LineTimetableQueryOptions options)
+    {
+    	if (Extensions.isNullOrWhiteSpace(lineId))
+    	{
+    		throw new IllegalArgumentException("LineId is required.");
+    	}
+    	
+    	if (options == null)
+    	{
+    		options = LineTimetableQueryOptions.defaultQueryOptions();
+    	}
+    	
+    	return TransportApiClientCalls.getLineTimetable(tokenComponent, timeoutInSeconds, lineId, options);
     }
     
     /**
      * Gets a list of all stops in the system.
      *
-     * @param  options  Options to limit the results by. Default: StopQueryOptions.Default()
+     * @param  options  Options to limit the results by. Default: StopQueryOptions.defaultQueryOptions()
      * @return      	A list of all stops.
      */
-    public List<Stop> GetStops(StopQueryOptions options)
+    public TransportApiResult<List<Stop>> getStops(StopQueryOptions options)
     {
     	if (options == null)
     	{
-    		options = StopQueryOptions.Default();
+    		options = StopQueryOptions.defaultQueryOptions();
     	}
     	
-    	return TransportApiClientCalls.GetStops(tokenComponent, options, null, null, null);
+    	return TransportApiClientCalls.getStops(tokenComponent, timeoutInSeconds, options, null, null, null);
     }
     
     /**
      * Gets a list of stops nearby ordered by distance from the point specified.
      *
-     * @param  options  		Options to limit the results by. Default: StopQueryOptions.Default()
+     * @param  options  		Options to limit the results by. Default: StopQueryOptions.defaultQueryOptions()
      * @param  latitude			Latitude in decimal degrees.
      * @param  longitude		Longitude in decimal degrees.
      * @param  radiusInMeters	Radius in meters to filter results by.
      * @return      			A list of stops nearby the specified point.
      */
-    public List<Stop> GetStopsNearby(StopQueryOptions options, double latitude, double longitude, int radiusInMeters)
+    public TransportApiResult<List<Stop>> getStopsNearby(StopQueryOptions options, double latitude, double longitude, int radiusInMeters)
     {
     	if (options == null)
     	{
-    		options = StopQueryOptions.Default();
+    		options = StopQueryOptions.defaultQueryOptions();
     	}
     	
     	if (radiusInMeters < 0)
@@ -283,21 +307,21 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid limit. Valid values are positive numbers only.");
     	}
     	
-    	return TransportApiClientCalls.GetStops(tokenComponent, options, new Point(longitude, latitude), radiusInMeters, null);
+    	return TransportApiClientCalls.getStops(tokenComponent, timeoutInSeconds, options, new Point(longitude, latitude), radiusInMeters, null);
     }
     
     /**
      * Gets a list of all stops within a bounding box.
      *
-     * @param  options  	Options to limit the results by. Default: StopQueryOptions.Default()
+     * @param  options  	Options to limit the results by. Default: StopQueryOptions.defaultQueryOptions()
      * @param  boundingBox 	The bounding box from where to retrieve stop. See valid examples here: http://developer.whereismytransport.com/documentation#bounding-box.
      * @return      		A list of stop within a bounding box.
      */
-    public List<Stop> GetStopsByBoundingBox(StopQueryOptions options, String boundingBox)
+    public TransportApiResult<List<Stop>> getStopsByBoundingBox(StopQueryOptions options, String boundingBox)
     {
     	if (options == null)
     	{
-    		options = StopQueryOptions.Default();
+    		options = StopQueryOptions.defaultQueryOptions();
     	}
     	
     	if (boundingBox == null)
@@ -311,7 +335,7 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid bounding box. See valid examples here: http://developer.whereismytransport.com/documentation#bounding-box.");
     	}
     	
-    	return TransportApiClientCalls.GetStops(tokenComponent, options, null, null, boundingBox);
+    	return TransportApiClientCalls.getStops(tokenComponent, timeoutInSeconds, options, null, null, boundingBox);
     }
     
     /**
@@ -320,13 +344,67 @@ public class TransportApiClient {
      * @param  stopId  	The id of the stop you want to get.
      * @return      	An stop.
      */
-    public Stop GetStop(String stopId)
+    public TransportApiResult<Stop> getStop(String stopId)
     {
-    	if (stopId == null || stopId.isEmpty())
+    	if (Extensions.isNullOrWhiteSpace(stopId))
     	{
     		throw new IllegalArgumentException("StopId is required.");
     	}
     	
-    	return TransportApiClientCalls.GetStop(tokenComponent, stopId);
+    	return TransportApiClientCalls.getStop(tokenComponent, timeoutInSeconds, stopId);
+    }
+    
+    /**
+     * Gets a timetable for a specific stop.
+     *
+     * @param  stopId  	The id of the stop you want to get a timetable for.
+     * @param  options  Options to limit the results by. Default: StopTimetableQueryOptions.defaultQueryOptions()
+     * @return      	The stop timetable.
+     */
+    public TransportApiResult<List<StopTimetable>> getStopTimetable(String stopId, StopTimetableQueryOptions options)
+    {
+    	if (Extensions.isNullOrWhiteSpace(stopId))
+    	{
+    		throw new IllegalArgumentException("StopId is required.");
+    	}
+    	
+    	if (options == null)
+    	{
+    		options = StopTimetableQueryOptions.defaultQueryOptions();
+    	}
+    	
+    	return TransportApiClientCalls.getStopTimetable(tokenComponent, timeoutInSeconds, stopId, options);
+    }
+    
+    /**
+     * Gets a list of all fare products in the system.
+     *
+     * @param  options  Options to limit the results by. Default: FareProductQueryOptions.defaultQueryOptions()
+     * @return      	A list of all fare products.
+     */
+    public TransportApiResult<List<FareProduct>> getFareProducts(FareProductQueryOptions options)
+    {
+    	if (options == null)
+    	{
+    		options = FareProductQueryOptions.defaultQueryOptions();
+    	}
+    	
+    	return TransportApiClientCalls.getFareProducts(tokenComponent, timeoutInSeconds, options);
+    }
+    
+    /**
+     * Gets a specific fare product.
+     *
+     * @param  fareProductId  	The id of the fare product you want to get.
+     * @return      			An fare product.
+     */
+    public TransportApiResult<FareProduct> getFareProduct(String fareProductId)
+    {
+    	if (Extensions.isNullOrWhiteSpace(fareProductId))
+    	{
+    		throw new IllegalArgumentException("FareProductId is required.");
+    	}
+    	
+    	return TransportApiClientCalls.getFareProduct(tokenComponent, timeoutInSeconds, fareProductId);
     }
 }

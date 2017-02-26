@@ -62,7 +62,7 @@ public class JourneyBodyOptions
 			this.maxItineraries = defaultMaxItineraries;
 	}
 	
-	public static JourneyBodyOptions Default()
+	public static JourneyBodyOptions defaultQueryOptions()
 	{
 		return new JourneyBodyOptions(defaultAgencies, defaultAgencies, defaultModes, defaultModes, defaultMaxItineraries, defaultFareProducts);
 	}

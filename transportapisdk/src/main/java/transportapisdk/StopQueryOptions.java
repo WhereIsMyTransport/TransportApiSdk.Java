@@ -18,7 +18,7 @@ public class StopQueryOptions extends QueryOptions
 		this.servesLines = servesLines;
 	}
 	
-	public static StopQueryOptions Default()
+	public static StopQueryOptions defaultQueryOptions()
 	{
 		return new StopQueryOptions(defaultAgencies, defaultAgencies, defaultModes, defaultModes, defaultServesLines, defaultShowChildren, defaultLimit, defaultOffset, defaultExclude);
 	}

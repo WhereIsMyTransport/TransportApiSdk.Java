@@ -8,7 +8,7 @@ public class AgencyQueryOptions extends QueryOptions
 		super(onlyAgencies, omitAgencies, defaultModes, defaultModes, limit, offset, exclude);
 	}
 	
-	public static AgencyQueryOptions Default()
+	public static AgencyQueryOptions defaultQueryOptions()
 	{
 		return new AgencyQueryOptions(defaultAgencies, defaultAgencies, defaultLimit, defaultOffset, defaultExclude);
 	}

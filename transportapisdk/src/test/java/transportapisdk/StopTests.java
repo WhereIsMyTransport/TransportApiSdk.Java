@@ -24,33 +24,37 @@ private static TransportApiClient client = new TransportApiClient(new TransportA
 	@Test
 	public void Stops_DefaultValues_IsSuccess() {
 		
-		List<Stop> stops = client.GetStops(StopQueryOptions.Default());
+		TransportApiResult<List<Stop>> stops = client.getStops(StopQueryOptions.defaultQueryOptions());
 		
-		assertTrue(stops.size() > 0);
+		assertTrue(stops.isSuccess);
+		assertTrue(stops.data.size() > 0);
 	}
 	
 	@Test
 	public void StopsNearby_DefaultValues_IsSuccess() {
 		
-		List<Stop> stopNearby = client.GetStopsNearby(StopQueryOptions.Default(), defaultLatitude, defaultLongitude, defaultRadiusInMeters);
+		TransportApiResult<List<Stop>> stopNearby = client.getStopsNearby(StopQueryOptions.defaultQueryOptions(), defaultLatitude, defaultLongitude, defaultRadiusInMeters);
 		
-		assertTrue(stopNearby.size() > 0);
+		assertTrue(stopNearby.isSuccess);
+		assertTrue(stopNearby.data.size() > 0);
 	}
 	
 	@Test
 	public void StopsByBoundingBox_DefaultValues_IsSuccess() {
 		
-		List<Stop> stopNearby = client.GetStopsByBoundingBox(StopQueryOptions.Default(), defaultBoundingBox);
+		TransportApiResult<List<Stop>> stopNearby = client.getStopsByBoundingBox(StopQueryOptions.defaultQueryOptions(), defaultBoundingBox);
 		
-		assertTrue(stopNearby.size() > 0);
+		assertTrue(stopNearby.isSuccess);
+		assertTrue(stopNearby.data.size() > 0);
 	}
 	
 	@Test
 	public void Stop_DefaultValues_IsSuccess() {
 		
-		Stop stop = client.GetStop(defaultStopId);
+		TransportApiResult<Stop> stop = client.getStop(defaultStopId);
 		
-		assertTrue(stop.getId().equals(defaultStopId));
+		assertTrue(stop.isSuccess);
+		assertTrue(stop.data.getId().equals(defaultStopId));
 	}
 	
 	@Test
@@ -67,10 +71,11 @@ private static TransportApiClient client = new TransportApiClient(new TransportA
 				StopQueryOptions.defaultOffset, 
 				StopQueryOptions.defaultExclude);
 		
-		List<Stop> stops = client.GetStops(options);
+		TransportApiResult<List<Stop>> stops = client.getStops(options);
 		
-		assertTrue(stops.size() > 0);
-		for (Stop stop : stops) 
+		assertTrue(stops.isSuccess);
+		assertTrue(stops.data.size() > 0);
+		for (Stop stop : stops.data) 
 		{
 			assertTrue(stop.getAgency().getId().equals(defaultAgencyId));
 		} 

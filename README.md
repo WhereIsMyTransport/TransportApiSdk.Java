@@ -16,7 +16,7 @@ String clientSecret = "CLIENT_SECRET";
 TransportApiClient defaultClient = new TransportApiClient(new TransportApiClientSettings(clientId, clientSecret));
 
 // Make an api call.
-List<Agency> agencies = client.GetAgencies();
+List<Agency> agencies = client.GetAgencies(AgencyQueryOptions.Default());
 
 // Do fancy things with the results.
 ```
@@ -32,8 +32,12 @@ The following end-points are available:
 * GET api/agencies/{id}
 * GET api/stops
 * GET api/stops/{id}
+* GET api/stops/{id}/timetables
 * GET api/lines
 * GET api/lines/{id}
+* GET api/lines/{id}/timetables
+* GET api/fareproducts
+* GET api/fareproducts/{id}
 
 ## Installation
 
@@ -44,12 +48,12 @@ Import via Maven:
 <dependency>
   <groupId>com.whereismytransport.transportapisdk</groupId>
   <artifactId>transportapisdk</artifactId>
-  <version>0.1.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.whereismytransport.transportapisdk:transportapisdk:0.1.0'
+compile 'com.whereismytransport.transportapisdk:transportapisdk:1.0.0'
 ```
 
 ## Author

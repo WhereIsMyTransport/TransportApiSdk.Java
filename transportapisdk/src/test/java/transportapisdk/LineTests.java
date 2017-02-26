@@ -25,33 +25,37 @@ public class LineTests
 	@Test
 	public void Lines_DefaultValues_IsSuccess() {
 		
-		List<Line> lines = client.GetLines(LineQueryOptions.Default());
+		TransportApiResult<List<Line>> lines = client.getLines(LineQueryOptions.defaultQueryOptions());
 		
-		assertTrue(lines.size() > 0);
+		assertTrue(lines.isSuccess);
+		assertTrue(lines.data.size() > 0);
 	}
 	
 	@Test
 	public void LinesNearby_DefaultValues_IsSuccess() {
 		
-		List<Line> lineNearby = client.GetLinesNearby(LineQueryOptions.Default(), defaultLatitude, defaultLongitude, defaultRadiusInMeters);
+		TransportApiResult<List<Line>> lineNearby = client.getLinesNearby(LineQueryOptions.defaultQueryOptions(), defaultLatitude, defaultLongitude, defaultRadiusInMeters);
 		
-		assertTrue(lineNearby.size() > 0);
+		assertTrue(lineNearby.isSuccess);
+		assertTrue(lineNearby.data.size() > 0);
 	}
 	
 	@Test
 	public void LinesByBoundingBox_DefaultValues_IsSuccess() {
 		
-		List<Line> lineNearby = client.GetLinesByBoundingBox(LineQueryOptions.Default(), defaultBoundingBox);
+		TransportApiResult<List<Line>> lineNearby = client.getLinesByBoundingBox(LineQueryOptions.defaultQueryOptions(), defaultBoundingBox);
 		
-		assertTrue(lineNearby.size() > 0);
+		assertTrue(lineNearby.isSuccess);
+		assertTrue(lineNearby.data.size() > 0);
 	}
 	
 	@Test
 	public void Line_DefaultValues_IsSuccess() {
 		
-		Line line = client.GetLine(defaultLineId);
+		TransportApiResult<Line> line = client.getLine(defaultLineId);
 		
-		assertTrue(line.getId().equals(defaultLineId));
+		assertTrue(line.isSuccess);
+		assertTrue(line.data.getId().equals(defaultLineId));
 	}
 	
 	@Test
@@ -67,10 +71,11 @@ public class LineTests
 				LineQueryOptions.defaultOffset, 
 				LineQueryOptions.defaultExclude);
 		
-		List<Line> lines = client.GetLines(options);
+		TransportApiResult<List<Line>> lines = client.getLines(options);
 		
-		assertTrue(lines.size() > 0);
-		for (Line line : lines) 
+		assertTrue(lines.isSuccess);
+		assertTrue(lines.data.size() > 0);
+		for (Line line : lines.data) 
 		{
 			assertTrue(line.getAgency().getId().equals(defaultAgencyId));
 		} 

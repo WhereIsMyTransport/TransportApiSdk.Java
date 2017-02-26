@@ -15,7 +15,7 @@ public class LineQueryOptions extends QueryOptions
 		this.servesStops = servesStops;
 	}
 	
-	public static LineQueryOptions Default()
+	public static LineQueryOptions defaultQueryOptions()
 	{
 		return new LineQueryOptions(defaultAgencies, defaultAgencies, defaultModes, defaultModes, defaultServesStops, defaultLimit, defaultOffset, defaultExclude);
 	}
