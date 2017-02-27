@@ -1,6 +1,6 @@
 # TransportApiSdk - WhereIsMyTransport API Client Library for Java
 
-The unofficial Java SDK for the [WhereIsMyTransport](https://www.whereismytransport.com) API. 
+The official Java SDK for the [WhereIsMyTransport](https://www.whereismytransport.com) API. 
 
 Access to the platform is completely free, so for more information and to get credentials, just visit the [developer portal](https://developer.whereismytransport.com).
 
@@ -41,8 +41,6 @@ The following end-points are available:
 
 ## Installation
 
-NOTE: Neither of these work yet.
-
 Import via Maven:
 ```xml
 <dependency>
@@ -51,7 +49,7 @@ Import via Maven:
   <version>1.0.0</version>
 </dependency>
 ```
-or Gradle:
+or Gradle (Note this is not available yet):
 ```groovy
 compile 'com.whereismytransport.transportapisdk:transportapisdk:1.0.0'
 ```
