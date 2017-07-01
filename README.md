@@ -18,7 +18,7 @@ String clientSecret = "CLIENT_SECRET";
 TransportApiClient defaultClient = new TransportApiClient(new TransportApiClientSettings(clientId, clientSecret));
 
 // Make an api call.
-List<Agency> agencies = client.GetAgencies(AgencyQueryOptions.Default());
+TransportApiResult<List<Agency>> agencies = defaultClient.getAgencies(AgencyQueryOptions.defaultQueryOptions());
 
 // Do fancy things with the results.
 ```
@@ -51,7 +51,7 @@ Download [the latest JAR](https://search.maven.org/remotecontent?filepath=com/wh
   <version>1.0.0</version>
 </dependency>
 ```
-or Gradle (Note this is not available yet):
+or Gradle:
 ```groovy
 compile 'com.whereismytransport.transportapisdk:transportapisdk:1.0.0'
 ```
