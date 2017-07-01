@@ -109,7 +109,7 @@ public class Stop {
      * @return
      *     The geometry
      */
-    public Geometry getGeometry() {
+    public Point getGeometry() {
         return geometry;
     }
 
