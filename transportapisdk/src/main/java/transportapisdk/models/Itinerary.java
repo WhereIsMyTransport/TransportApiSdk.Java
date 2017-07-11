@@ -1,6 +1,7 @@
 package transportapisdk.models;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Itinerary {
@@ -57,6 +58,15 @@ public class Itinerary {
     public String getDepartureTime() {
         return departureTime;
     }
+    
+    /**
+    *
+    * @return
+    * The departureTime
+    */
+   public Date getDepartureTimeAsDate() {
+       return Shortcuts.convertIsoDateTimeStringToDate(departureTime);
+   }
 
     /**
      *
@@ -75,6 +85,15 @@ public class Itinerary {
     public String getArrivalTime() {
         return arrivalTime;
     }
+    
+    /**
+    *
+    * @return
+    * The arrivalTime
+    */
+   public Date getArrivalTimeAsDate() {
+       return Shortcuts.convertIsoDateTimeStringToDate(arrivalTime);
+   }
 
     /**
      *

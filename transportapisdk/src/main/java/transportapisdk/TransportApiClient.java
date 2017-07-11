@@ -28,7 +28,7 @@ public class TransportApiClient {
      * @param  endLatitude		Latitude in decimal degrees of the desitnation.
      * @param  endLongitude		Longitude in decimal degrees of the desitnation.
      * @param  exclude			Entities to exclude from the call to reduce the payload. See https://developer.whereismytransport.com/documentation#excluding-data
-     * @return      			A journey from A to B using public TransportApiResult<transport.
+     * @return      			A journey from A to B using public transport.
      */
     public TransportApiResult<Journey> postJourney(JourneyBodyOptions options, double startLatitude, double startLongitude, double endLatitude, double endLongitude, String exclude)
     {
@@ -251,7 +251,7 @@ public class TransportApiClient {
     /**
      * Gets a timetable for a specific line.
      *
-     * @param  stopId  	The id of the line you want to get a timetable for.
+     * @param  lineId  	The id of the line you want to get a timetable for.
      * @param  options  Options to limit the results by. Default: LineTimetableQueryOptions.defaultQueryOptions()
      * @return      	The line timetable.
      */

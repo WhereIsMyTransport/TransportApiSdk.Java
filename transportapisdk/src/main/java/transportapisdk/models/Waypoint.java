@@ -1,5 +1,7 @@
 package transportapisdk.models;
 
+import java.util.Date;
+
 public class Waypoint {
 
     private Stop stop;
@@ -36,6 +38,15 @@ public class Waypoint {
     public String getArrivalTime() {
         return arrivalTime;
     }
+    
+    /**
+    *
+    * @return
+    * The arrivalTime
+    */
+   public Date getArrivalTimeAsDate() {
+       return Shortcuts.convertIsoDateTimeStringToDate(arrivalTime);
+   }
 
     /**
      * 
@@ -54,6 +65,15 @@ public class Waypoint {
     public String getDepartureTime() {
         return departureTime;
     }
+    
+    /**
+    *
+    * @return
+    * The departureTime
+    */
+   public Date getDepartureTimeAsDate() {
+       return Shortcuts.convertIsoDateTimeStringToDate(departureTime);
+   }
 
     /**
      * 

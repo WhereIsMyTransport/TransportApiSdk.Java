@@ -1,5 +1,7 @@
 package transportapisdk.models;
 
+import java.util.Date;
+
 /**
  * Created by James on 2016/07/21.
  */
@@ -19,6 +21,15 @@ public class StopTimetable {
     public String getArrivalTime() {
         return arrivalTime;
     }
+    
+    /**
+    *
+    * @return
+    * The arrivalTime
+    */
+   public Date getArrivalTimeAsDate() {
+       return Shortcuts.convertIsoDateTimeStringToDate(arrivalTime);
+   }
 
     /**
      *
@@ -37,6 +48,15 @@ public class StopTimetable {
     public String getDepartureTime() {
         return departureTime;
     }
+    
+    /**
+    *
+    * @return
+    * The departureTime
+    */
+   public Date getDepartureTimeAsDate() {
+       return Shortcuts.convertIsoDateTimeStringToDate(departureTime);
+   }
 
     /**
      *
