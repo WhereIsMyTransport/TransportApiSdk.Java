@@ -43,17 +43,17 @@ The following end-points are available:
 
 ## Installation
 
-Download [the latest JAR](https://search.maven.org/remotecontent?filepath=com/whereismytransport/transportapisdk/transportapisdk/1.0.0/transportapisdk-1.0.0.jar) or grab via Maven:
+Download [the latest JAR](https://search.maven.org/remotecontent?filepath=com/whereismytransport/transportapisdk/transportapisdk/1.0.1/transportapisdk-1.0.1.jar) or grab via Maven:
 ```xml
 <dependency>
   <groupId>com.whereismytransport.transportapisdk</groupId>
   <artifactId>transportapisdk</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.whereismytransport.transportapisdk:transportapisdk:1.0.0'
+compile 'com.whereismytransport.transportapisdk:transportapisdk:1.0.1'
 ```
 
 ## Author
