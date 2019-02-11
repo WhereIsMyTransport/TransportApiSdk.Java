@@ -55,8 +55,6 @@ class TokenComponent
     
 	public TransportApiResult<String> getAccessToken() 
 	{      
-		
-		
         if (this.accessToken != null)
         {
         	if (!Extensions.tokenIsExpired(expiryTime))

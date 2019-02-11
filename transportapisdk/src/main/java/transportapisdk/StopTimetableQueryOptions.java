@@ -15,6 +15,7 @@ public class StopTimetableQueryOptions extends QueryOptions
 		this.earliestArrivalTime = earliestArrivalTime;
 		this.latestArrivalTime = latestArrivalTime;
 	}
+
 	
 	public static StopTimetableQueryOptions defaultQueryOptions()
 	{

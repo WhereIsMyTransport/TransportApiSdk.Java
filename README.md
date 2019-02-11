@@ -4,7 +4,7 @@
 
 The official Java SDK for the [WhereIsMyTransport](https://www.whereismytransport.com) API. 
 
-Access to the platform is completely free, so for more information and to get credentials, just visit the [developer portal](https://developer.whereismytransport.com).
+Access to the platform is free, so for more information and to get credentials, just visit the [developer portal](https://developer.whereismytransport.com).
 
 ## Usage
 
@@ -17,8 +17,17 @@ String clientSecret = "CLIENT_SECRET";
 // Define the api client.
 TransportApiClient defaultClient = new TransportApiClient(new TransportApiClientSettings(clientId, clientSecret));
 
-// Make an api call.
+// Make an api call to get agencies:
 TransportApiResult<List<Agency>> agencies = defaultClient.getAgencies(AgencyQueryOptions.defaultQueryOptions());
+
+// Make an api call to get journeys:
+// Note: The coordinate order expected is "Latitude", "Longitude"
+
+// Example of a journey call made in Cape Town, South Africa (Southern Hemisphere)
+TransportApiResult<Journey> journey = client.postJourney(null, -33.986342, 18.468806, -33.918842, 18.389256, "");
+
+// Example of a journey call made in Cairo, Egypt (Northern Hemisphere)
+TransportApiResult<Journey> journey = client.postJourney(null, 30.07444, 31.26091, 30.01203, 31.25061, "");
 
 // Do fancy things with the results.
 ```
@@ -30,6 +39,7 @@ The following end-points are available:
 * POST api/journeys
 * GET api/journeys/{id}
 * GET api/journeys/{id}/itineraries/{id}
+** Note: Itineraries are only available for up to 30 days after a journey request is made. Requesting past this period will result in a 404 Not Found.
 * GET api/agencies
 * GET api/agencies/{id}
 * GET api/stops
@@ -43,17 +53,17 @@ The following end-points are available:
 
 ## Installation
 
-Download [the latest JAR](https://search.maven.org/remotecontent?filepath=com/whereismytransport/transportapisdk/transportapisdk/1.0.1/transportapisdk-1.0.1.jar) or grab via Maven:
+Download [the latest JAR](https://search.maven.org/remotecontent?filepath=com/whereismytransport/transportapisdk/transportapisdk/1.0.2/transportapisdk-1.0.2.jar) or grab via Maven:
 ```xml
 <dependency>
   <groupId>com.whereismytransport.transportapisdk</groupId>
   <artifactId>transportapisdk</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.whereismytransport.transportapisdk:transportapisdk:1.0.1'
+compile 'com.whereismytransport.transportapisdk:transportapisdk:1.0.2'
 ```
 
 ## Author

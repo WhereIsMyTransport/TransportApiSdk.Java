@@ -5,10 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -21,6 +19,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -34,42 +33,42 @@ interface ITransportApi
         "Content-Type: application/json"
 	})
 	@POST("journeys")
-	Call<Journey> PostJourney(@Body JourneyInput journey, @Query("exclude") String exclude);
+	Call<Journey> PostJourney(@Header("Unique-Context-Id") String uniqueContextId, @Body JourneyInput journey, @Query("exclude") String exclude);
 	
 	@Headers({
         "Accept: application/json",
         "Content-Type: application/json"
 	})
 	@GET("journeys/{journeyId}")
-	Call<Journey> GetJourney(@Path("journeyId") String journeyId, @Query("exclude") String exclude);
+	Call<Journey> GetJourney(@Header("Unique-Context-Id") String uniqueContextId, @Path("journeyId") String journeyId, @Query("exclude") String exclude);
 
 	@Headers({
         "Accept: application/json",
         "Content-Type: application/json"
 	})
 	@GET("journeys/{journeyId}/itineraries/{itineraryId}")
-	Call<Itinerary> GetItinerary(@Path("journeyId") String journeyId, @Path("itineraryId") String itineraryId, @Query("exclude") String exclude);
+	Call<Itinerary> GetItinerary(@Header("Unique-Context-Id") String uniqueContextId, @Path("journeyId") String journeyId, @Path("itineraryId") String itineraryId, @Query("exclude") String exclude);
 
 	@Headers({
         "Accept: application/json",
         "Content-Type: application/json"
 	})
 	@GET("agencies")
-	Call<List<Agency>> GetAgencies(@Query("agencies") List<String> agencies, @Query("limit") int limit, @Query("offset") int offset, @Query("point") Point point, @Query("radius") Integer radius, @Query("bbox") String bbox, @Query("exclude") String exclude);
-
+	Call<List<Agency>> GetAgencies(@Header("Unique-Context-Id") String uniqueContextId, @Query("agencies") List<String> agencies, @Query("limit") int limit, @Query("offset") int offset, @Query("point") Point point, @Query("radius") Integer radius, @Query("bbox") String bbox, @Query("exclude") String exclude);
+	
 	@Headers({
         "Accept: application/json",
         "Content-Type: application/json"
 	})
 	@GET("agencies/{agencyId}")
-	Call<Agency> GetAgency(@Path("agencyId") String id);
+	Call<Agency> GetAgency(@Header("Unique-Context-Id") String uniqueContextId, @Path("agencyId") String id);
 	
 	@Headers({
         "Accept: application/json",
         "Content-Type: application/json"
 	})
 	@GET("stops")
-	Call<List<Stop>> GetStops(@Query("agencies") List<String> agencies, @Query("modes") List<String> modes, @Query("servesLines") List<String> servesLines, @Query("showChildren") boolean showChildren, @Query("limit") int limit, @Query("offset") int offset, @Query("point") Point point, @Query("radius") Integer radius, @Query("bbox") String bbox, @Query("exclude") String exclude);
+	Call<List<Stop>> GetStops(@Header("Unique-Context-Id") String uniqueContextId, @Query("agencies") List<String> agencies, @Query("modes") List<String> modes, @Query("servesLines") List<String> servesLines, @Query("showChildren") boolean showChildren, @Query("limit") int limit, @Query("offset") int offset, @Query("point") Point point, @Query("radius") Integer radius, @Query("bbox") String bbox, @Query("exclude") String exclude);
 
 
 	@Headers({
@@ -77,49 +76,49 @@ interface ITransportApi
         "Content-Type: application/json"
 	})
 	@GET("stops/{stopId}")
-	Call<Stop> GetStop(@Path("stopId") String stopId);
+	Call<Stop> GetStop(@Header("Unique-Context-Id") String uniqueContextId, @Path("stopId") String stopId);
 
 	@Headers({
 		"Accept: application/json",
 		"Content-Type: application/json"
 	})
 	@GET("lines")
-	Call<List<Line>> GetLines(@Query("agencies") List<String> agencies, @Query("modes") List<String> modes, @Query("servesStops") List<String> servesStops, @Query("limit") int limit, @Query("offset") int offset, @Query("point") Point point, @Query("radius") Integer radius, @Query("bbox") String bbox, @Query("exclude") String exclude);
+	Call<List<Line>> GetLines(@Header("Unique-Context-Id") String uniqueContextId, @Query("agencies") List<String> agencies, @Query("modes") List<String> modes, @Query("servesStops") List<String> servesStops, @Query("limit") int limit, @Query("offset") int offset, @Query("point") Point point, @Query("radius") Integer radius, @Query("bbox") String bbox, @Query("exclude") String exclude);
 
 	@Headers({
 	    "Accept: application/json",
 	    "Content-Type: application/json"
 	})
 	@GET("lines/{lineId}")
-	Call<Line> GetLine(@Path("lineId") String lineId);
+	Call<Line> GetLine(@Header("Unique-Context-Id") String uniqueContextId, @Path("lineId") String lineId);
 
 	@Headers({
         "Accept: application/json",
         "Content-Type: application/json"
 	})
 	@GET("fareproducts")
-	Call<List<FareProduct>> GetFareProducts(@Query("agencies") List<String> agencies, @Query("limit") int limit, @Query("offset") int offset, @Query("exclude") String exclude);
+	Call<List<FareProduct>> GetFareProducts(@Header("Unique-Context-Id") String uniqueContextId, @Query("agencies") List<String> agencies, @Query("limit") int limit, @Query("offset") int offset, @Query("exclude") String exclude);
 
 	@Headers({
 	    "Accept: application/json",
 	    "Content-Type: application/json"
 	})
 	@GET("fareproducts/{fareProductId}")
-	Call<FareProduct> GetFareProduct(@Path("fareProductId") String fareProductId);
+	Call<FareProduct> GetFareProduct(@Header("Unique-Context-Id") String uniqueContextId, @Path("fareProductId") String fareProductId);
 	
 	@Headers({
         "Accept: application/json",
         "Content-Type: application/json"
 	})
 	@GET("stops/{stopId}/timetables")
-	Call<List<StopTimetable>> GetStopTimetable(@Path("stopId") String stopId, @Query("earliestArrivalTime") String earliestArrivalTime, @Query("latestArrivalTime") String latestArrivalTime, @Query("limit") int limit, @Query("offset") int offset, @Query("exclude") String exclude);
+	Call<List<StopTimetable>> GetStopTimetable(@Header("Unique-Context-Id") String uniqueContextId, @Path("stopId") String stopId, @Query("earliestArrivalTime") String earliestArrivalTime, @Query("latestArrivalTime") String latestArrivalTime, @Query("limit") int limit, @Query("offset") int offset, @Query("exclude") String exclude);
 
 	@Headers({
 	        "Accept: application/json",
 	        "Content-Type: application/json"
 	})
 	@GET("lines/{lineId}/timetables")
-	Call<List<LineTimetable>> GetLineTimetable(@Path("lineId") String lineId, @Query("earliestDepartureTime") String earliestDepartureTime, @Query("latestDepartureTime") String latestDepartureTime, @Query("departureStopId") String departureStopId, @Query("arrivalStopId") String arrivalStopId, @Query("limit") int limit, @Query("offset") int offset, @Query("exclude") String exclude);
+	Call<List<LineTimetable>> GetLineTimetable(@Header("Unique-Context-Id") String uniqueContextId, @Path("lineId") String lineId, @Query("earliestDepartureTime") String earliestDepartureTime, @Query("latestDepartureTime") String latestDepartureTime, @Query("departureStopId") String departureStopId, @Query("arrivalStopId") String arrivalStopId, @Query("limit") int limit, @Query("offset") int offset, @Query("exclude") String exclude);
 
 }
 
@@ -137,8 +136,8 @@ class TransportApiClientCalls
 	private static TransportApiResult<FareProduct> fareProduct = new TransportApiResult<FareProduct>();
 	private static TransportApiResult<List<StopTimetable>> stopTimetable = new TransportApiResult<List<StopTimetable>>();
 	private static TransportApiResult<List<LineTimetable>> lineTimetable = new TransportApiResult<List<LineTimetable>>();
-    
-	public static TransportApiResult<Journey> postJourney(final TokenComponent tokenComponent, int timeoutInSeconds, JourneyBodyOptions options, Point start, Point end, String exclude)
+	
+	public static TransportApiResult<Journey> postJourney(final TokenComponent tokenComponent, final TransportApiClientSettings settings, JourneyBodyOptions options, Point start, Point end, String exclude)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -152,9 +151,9 @@ class TransportApiClientCalls
         	journey.data = null;
         	
         	return journey;
-		}
-		
-		ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+		}   		
+
+		ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
 		@SuppressWarnings("unchecked")
 		MultiPoint geometry = new MultiPoint(Arrays.asList(start.getCoordinatesList(), end.getCoordinatesList()));
@@ -171,7 +170,7 @@ class TransportApiClientCalls
 	    		options.maxItineraries,
 	    		options.fareProducts);
 		
-        Call<Journey> call = service.PostJourney(inputModel, exclude);
+        Call<Journey> call = service.PostJourney(settings.uniqueContextId, inputModel, exclude);
         
         call.enqueue(new Callback<Journey>() {
             public void onResponse(Call<Journey> call, Response<Journey> response) {
@@ -208,7 +207,7 @@ class TransportApiClientCalls
         return journey;
     }
 	
-	public static TransportApiResult<Journey> getJourney(final TokenComponent tokenComponent, int timeoutInSeconds, String journeyId, String exclude)
+	public static TransportApiResult<Journey> getJourney(final TokenComponent tokenComponent, final TransportApiClientSettings settings, String journeyId, String exclude)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 		
@@ -224,9 +223,9 @@ class TransportApiClientCalls
         	return journey;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<Journey> call = service.GetJourney(journeyId, exclude);
+        Call<Journey> call = service.GetJourney(settings.uniqueContextId, journeyId, exclude);
         
         call.enqueue(new Callback<Journey>() {
         	public void onResponse(Call<Journey> call, Response<Journey> response) {
@@ -263,7 +262,7 @@ class TransportApiClientCalls
         return journey;
     }
 	
-	public static TransportApiResult<Itinerary> getItinerary(final TokenComponent tokenComponent, int timeoutInSeconds, String journeyId, String itineraryId, String exclude)
+	public static TransportApiResult<Itinerary> getItinerary(final TokenComponent tokenComponent, final TransportApiClientSettings settings, String journeyId, String itineraryId, String exclude)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -279,9 +278,9 @@ class TransportApiClientCalls
         	return itinerary;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<Itinerary> call = service.GetItinerary(journeyId, itineraryId, exclude);
+        Call<Itinerary> call = service.GetItinerary(settings.uniqueContextId, journeyId, itineraryId, exclude);
         
         call.enqueue(new Callback<Itinerary>() {
         	public void onResponse(Call<Itinerary> call, Response<Itinerary> response) {
@@ -318,7 +317,7 @@ class TransportApiClientCalls
         return itinerary;
     }
 	
-	public static TransportApiResult<List<Agency>> getAgencies(final TokenComponent tokenComponent, int timeoutInSeconds, AgencyQueryOptions options, Point point, Integer radiusInMeters, String boundingBox)
+	public static TransportApiResult<List<Agency>> getAgencies(final TokenComponent tokenComponent, final TransportApiClientSettings settings, AgencyQueryOptions options, Point point, Integer radiusInMeters, String boundingBox)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -334,9 +333,9 @@ class TransportApiClientCalls
         	return agencies;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<List<Agency>> call = service.GetAgencies(options.agencies, options.limit, options.offset, point, radiusInMeters, boundingBox, options.exclude);
+        Call<List<Agency>> call = service.GetAgencies(settings.uniqueContextId, options.agencies, options.limit, options.offset, point, radiusInMeters, boundingBox, options.exclude);
         
         call.enqueue(new Callback<List<Agency>>() {
         	public void onResponse(Call<List<Agency>> call, Response<List<Agency>> response) {
@@ -373,7 +372,7 @@ class TransportApiClientCalls
         return agencies;
     }
     
-	public static TransportApiResult<Agency> getAgency(final TokenComponent tokenComponent, int timeoutInSeconds, String agencyId)
+	public static TransportApiResult<Agency> getAgency(final TokenComponent tokenComponent, final TransportApiClientSettings settings, String agencyId)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -389,9 +388,9 @@ class TransportApiClientCalls
         	return agency;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<Agency> call = service.GetAgency(agencyId);
+        Call<Agency> call = service.GetAgency(settings.uniqueContextId, agencyId);
         
         call.enqueue(new Callback<Agency>() {
         	public void onResponse(Call<Agency> call, Response<Agency> response) {
@@ -428,7 +427,7 @@ class TransportApiClientCalls
         return agency;
     }
 	
-	public static TransportApiResult<List<Line>> getLines(final TokenComponent tokenComponent, int timeoutInSeconds, LineQueryOptions options, Point point, Integer radiusInMeters, String boundingBox)
+	public static TransportApiResult<List<Line>> getLines(final TokenComponent tokenComponent, final TransportApiClientSettings settings, LineQueryOptions options, Point point, Integer radiusInMeters, String boundingBox)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -444,9 +443,9 @@ class TransportApiClientCalls
         	return lines;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<List<Line>> call = service.GetLines(options.agencies, options.modes, options.servesStops, options.limit, options.offset, point, radiusInMeters, boundingBox, options.exclude);
+        Call<List<Line>> call = service.GetLines(settings.uniqueContextId, options.agencies, options.modes, options.servesStops, options.limit, options.offset, point, radiusInMeters, boundingBox, options.exclude);
         
         call.enqueue(new Callback<List<Line>>() {
         	public void onResponse(Call<List<Line>> call, Response<List<Line>> response) {
@@ -483,7 +482,7 @@ class TransportApiClientCalls
         return lines;
     }
     
-	public static TransportApiResult<Line> getLine(final TokenComponent tokenComponent, int timeoutInSeconds, String lineId)
+	public static TransportApiResult<Line> getLine(final TokenComponent tokenComponent, final TransportApiClientSettings settings, String lineId)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -499,9 +498,9 @@ class TransportApiClientCalls
         	return line;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<Line> call = service.GetLine(lineId);
+        Call<Line> call = service.GetLine(settings.uniqueContextId, lineId);
         
         call.enqueue(new Callback<Line>() {
         	public void onResponse(Call<Line> call, Response<Line> response) {
@@ -538,7 +537,7 @@ class TransportApiClientCalls
         return line;
     }
 	
-	public static TransportApiResult<List<LineTimetable>> getLineTimetable(final TokenComponent tokenComponent, int timeoutInSeconds, String lineId, LineTimetableQueryOptions options)
+	public static TransportApiResult<List<LineTimetable>> getLineTimetable(final TokenComponent tokenComponent, final TransportApiClientSettings settings, String lineId, LineTimetableQueryOptions options)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -554,9 +553,9 @@ class TransportApiClientCalls
         	return lineTimetable;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<List<LineTimetable>> call = service.GetLineTimetable(lineId, options.earliestDepartureTime, options.latestDepartureTime, options.departureStopId, options.arrivalStopId, options.limit, options.offset, options.exclude);
+        Call<List<LineTimetable>> call = service.GetLineTimetable(settings.uniqueContextId, lineId, options.earliestDepartureTime, options.latestDepartureTime, options.departureStopId, options.arrivalStopId, options.limit, options.offset, options.exclude);
                 
         call.enqueue(new Callback<List<LineTimetable>>() {
             public void onResponse(Call<List<LineTimetable>> call, Response<List<LineTimetable>> response) {
@@ -593,7 +592,7 @@ class TransportApiClientCalls
         return lineTimetable;
     }
 	
-	public static TransportApiResult<List<Stop>> getStops(final TokenComponent tokenComponent, int timeoutInSeconds, StopQueryOptions options, Point point, Integer radiusInMeters, String boundingBox)
+	public static TransportApiResult<List<Stop>> getStops(final TokenComponent tokenComponent, final TransportApiClientSettings settings, StopQueryOptions options, Point point, Integer radiusInMeters, String boundingBox)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -609,9 +608,9 @@ class TransportApiClientCalls
         	return stops;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<List<Stop>> call = service.GetStops(options.agencies, options.modes, options.servesLines, options.showChildren, options.limit, options.offset, point, radiusInMeters, boundingBox, options.exclude);
+        Call<List<Stop>> call = service.GetStops(settings.uniqueContextId, options.agencies, options.modes, options.servesLines, options.showChildren, options.limit, options.offset, point, radiusInMeters, boundingBox, options.exclude);
         
         call.enqueue(new Callback<List<Stop>>() {
         	public void onResponse(Call<List<Stop>> call, Response<List<Stop>> response) {
@@ -648,7 +647,7 @@ class TransportApiClientCalls
         return stops;
     }
     
-	public static TransportApiResult<Stop> getStop(final TokenComponent tokenComponent, int timeoutInSeconds, String stopId)
+	public static TransportApiResult<Stop> getStop(final TokenComponent tokenComponent, final TransportApiClientSettings settings, String stopId)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -664,9 +663,9 @@ class TransportApiClientCalls
         	return stop;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<Stop> call = service.GetStop(stopId);
+        Call<Stop> call = service.GetStop(settings.uniqueContextId, stopId);
         
         call.enqueue(new Callback<Stop>() {
         	public void onResponse(Call<Stop> call, Response<Stop> response) {
@@ -703,7 +702,7 @@ class TransportApiClientCalls
         return stop;
     }
 	
-	public static TransportApiResult<List<StopTimetable>> getStopTimetable(final TokenComponent tokenComponent, int timeoutInSeconds, String stopId, StopTimetableQueryOptions options)
+	public static TransportApiResult<List<StopTimetable>> getStopTimetable(final TokenComponent tokenComponent, final TransportApiClientSettings settings, String stopId, StopTimetableQueryOptions options)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -719,9 +718,9 @@ class TransportApiClientCalls
         	return stopTimetable;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<List<StopTimetable>> call = service.GetStopTimetable(stopId, options.earliestArrivalTime, options.latestArrivalTime, options.limit, options.offset, options.exclude);
+        Call<List<StopTimetable>> call = service.GetStopTimetable(settings.uniqueContextId, stopId, options.earliestArrivalTime, options.latestArrivalTime, options.limit, options.offset, options.exclude);
         
         call.enqueue(new Callback<List<StopTimetable>>() {
         	public void onResponse(Call<List<StopTimetable>> call, Response<List<StopTimetable>> response) {
@@ -758,7 +757,7 @@ class TransportApiClientCalls
         return stopTimetable;
     }
     
-	public static TransportApiResult<List<FareProduct>> getFareProducts(final TokenComponent tokenComponent, int timeoutInSeconds, FareProductQueryOptions options)
+	public static TransportApiResult<List<FareProduct>> getFareProducts(final TokenComponent tokenComponent, final TransportApiClientSettings settings, FareProductQueryOptions options)
     {
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -774,9 +773,9 @@ class TransportApiClientCalls
         	return fareProducts;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<List<FareProduct>> call = service.GetFareProducts(options.agencies, options.limit, options.offset, options.exclude);
+        Call<List<FareProduct>> call = service.GetFareProducts(settings.uniqueContextId, options.agencies, options.limit, options.offset, options.exclude);
         
         call.enqueue(new Callback<List<FareProduct>>() {
         	public void onResponse(Call<List<FareProduct>> call, Response<List<FareProduct>> response) {
@@ -813,7 +812,7 @@ class TransportApiClientCalls
         return fareProducts;
     }
     
-	public static TransportApiResult<FareProduct> getFareProduct(final TokenComponent tokenComponent, int timeoutInSeconds, String fareProductId)
+	public static TransportApiResult<FareProduct> getFareProduct(final TokenComponent tokenComponent, final TransportApiClientSettings settings, String fareProductId)
 	{
 		final CountDownLatch latch = new CountDownLatch(1);
 		
@@ -829,9 +828,9 @@ class TransportApiClientCalls
         	return fareProduct;
 		}
 		
-    	ITransportApi service = getTransportApiClient(tokenComponent, timeoutInSeconds, accessToken.data);
+    	ITransportApi service = getTransportApiClient(tokenComponent, settings, accessToken.data);
         
-        Call<FareProduct> call = service.GetFareProduct(fareProductId);
+        Call<FareProduct> call = service.GetFareProduct(settings.uniqueContextId, fareProductId);
         
         call.enqueue(new Callback<FareProduct>() {
         	public void onResponse(Call<FareProduct> call, Response<FareProduct> response) {
@@ -868,7 +867,7 @@ class TransportApiClientCalls
         return fareProduct;
     }
 	
-    private static ITransportApi getTransportApiClient(final TokenComponent tokenComponent, final int timeoutInSeconds, final String accessToken)
+    private static ITransportApi getTransportApiClient(final TokenComponent tokenComponent, final TransportApiClientSettings settings, final String accessToken)
     {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -887,10 +886,10 @@ class TransportApiClientCalls
             }
         };
 
-        OkHttpClient finalClient = httpClient.addInterceptor(headerIntercept).addInterceptor(logging).readTimeout(timeoutInSeconds, TimeUnit.SECONDS).connectTimeout(timeoutInSeconds, TimeUnit.SECONDS).build();
+        OkHttpClient finalClient = httpClient.addInterceptor(headerIntercept).addInterceptor(logging).readTimeout(settings.timeoutInSeconds, TimeUnit.SECONDS).connectTimeout(settings.timeoutInSeconds, TimeUnit.SECONDS).build();
 
         Retrofit restAdapter = new Retrofit.Builder()
-                .baseUrl("https://platform.whereismytransport.com/api/")
+                .baseUrl(settings.environmentUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(finalClient)
                 .build();

@@ -1,5 +1,6 @@
 package transportapisdk;
 
+import java.net.InetAddress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -62,4 +63,32 @@ class Extensions {
 
         return false;
     }
+    
+    public static String uniqueContextId()
+    {	
+		try
+		{
+			//InetAddress []mac = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
+
+			//return hash(mac);
+			
+			return "";
+		}
+		catch(Exception e)
+		{
+			return "";
+		}
+    }
+    
+	private static String hash(InetAddress []mac) 
+	{
+		long result = 17;
+		
+		for(int i=0; i < mac.length; i++) 
+		{
+		  result = 37 * result + mac[i].getHostAddress().hashCode();
+		}
+		
+		return String.valueOf(result);
+	}
 }

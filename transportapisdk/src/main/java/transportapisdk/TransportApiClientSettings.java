@@ -4,6 +4,8 @@ public class TransportApiClientSettings
 {
 	public String clientId;
 	public String clientSecret;
+	public String uniqueContextId;
+	public String environmentUrl;
 	public int timeoutInSeconds;
     
     public TransportApiClientSettings(String clientId, String clientSecret)
@@ -19,6 +21,8 @@ public class TransportApiClientSettings
     	}
     	
     	this.timeoutInSeconds = 30;
+    	this.uniqueContextId = java.util.UUID.randomUUID().toString();
+    	this.environmentUrl = "https://platform.whereismytransport.com/api/"; 
     	this.clientId = clientId;
     	this.clientSecret = clientSecret;
     }
@@ -33,5 +37,29 @@ public class TransportApiClientSettings
     	}
     	
     	this.timeoutInSeconds = timeoutInSeconds;
+    }
+    
+    public TransportApiClientSettings(String clientId, String clientSecret, int timeoutInSeconds, String uniqueContextId)
+    {
+    	this(clientId, clientSecret, timeoutInSeconds);
+    	
+    	if (Extensions.isNullOrWhiteSpace(uniqueContextId))
+    	{
+    		throw new IllegalArgumentException("UniqueContextId cannot be null.");
+    	}
+    	
+    	this.uniqueContextId = uniqueContextId;
+    }
+    
+    public TransportApiClientSettings(String clientId, String clientSecret, int timeoutInSeconds, String uniqueContextId, String environmentUrl)
+    {
+    	this(clientId, clientSecret, timeoutInSeconds, uniqueContextId);
+    	
+    	if (Extensions.isNullOrWhiteSpace(environmentUrl))
+    	{
+    		throw new IllegalArgumentException("EnvironmentUrl cannot be null.");
+    	}
+    	
+    	this.environmentUrl = environmentUrl;
     }
 }

@@ -1,8 +1,5 @@
 package transportapisdk.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Agency {
 
     private String id;
@@ -10,7 +7,6 @@ public class Agency {
     private String name;
     private String culture;
     private String description;
-    private List<Alert> alerts = new ArrayList<Alert>();
 
     /**
      *
@@ -101,23 +97,4 @@ public class Agency {
    public void setDescription(String description) {
        this.description = description;
    }
-   
-   /**
-   *
-   * @return
-   * The alerts
-   */
-  public List<Alert> getAlerts() {
-      return alerts;
-  }
-
-  /**
-   *
-   * @param alerts
-   * The alerts
-   */
-  public void setAlerts(List<Alert> alerts) {
-      this.alerts = alerts;
-  }
-
 }

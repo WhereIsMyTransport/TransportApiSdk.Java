@@ -5,8 +5,8 @@ import java.util.List;
 
 public class TransportApiClient {
 	
+	private TransportApiClientSettings settings;
 	private TokenComponent tokenComponent;
-	private int timeoutInSeconds;
 
     public TransportApiClient(TransportApiClientSettings settings)
     {
@@ -15,9 +15,10 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Settings cannot be null.");
     	}
     	
-    	this.timeoutInSeconds = settings.timeoutInSeconds;
+    	this.settings = settings;
     	this.tokenComponent = new TokenComponent(settings.clientId, settings.clientSecret);
     }
+
     
     /**
      * Gets a list of agencies nearby ordered by distance from the point specified.
@@ -37,15 +38,15 @@ public class TransportApiClient {
     		options = JourneyBodyOptions.defaultQueryOptions();
     	}
     	
-    	return TransportApiClientCalls.postJourney(tokenComponent, timeoutInSeconds, options, new Point(startLongitude, startLatitude), new Point(endLongitude, endLatitude), exclude);
+    	return TransportApiClientCalls.postJourney(tokenComponent, settings, options, new Point(startLongitude, startLatitude), new Point(endLongitude, endLatitude), exclude);
     }
-    
+        
     /**
      * Gets a journey previously requested through the POST journey call.
      *
-     * @param  journeyId  	The id of the journey you want to get. Previously made in a POST journey call.
-     * @param  exclude  	Entities to exclude from the call to reduce the payload. See https://developer.whereismytransport.com/documentation#excluding-data
-     * @return      		A previously requested journey.
+     * @param  journeyId  		The id of the journey you want to get. Previously made in a POST journey call.
+     * @param  exclude  		Entities to exclude from the call to reduce the payload. See https://developer.whereismytransport.com/documentation#excluding-data
+     * @return      			A previously requested journey.
      */
     public TransportApiResult<Journey> getJourney(String journeyId, String exclude)
     {
@@ -54,9 +55,9 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("JourneyId is required.");
     	}
     	
-    	return TransportApiClientCalls.getJourney(tokenComponent, timeoutInSeconds, journeyId, exclude);
+    	return TransportApiClientCalls.getJourney(tokenComponent, settings, journeyId, exclude);
     }
-    
+        
     /**
      * Gets a specific itinerary of a journey previously requested through the POST journey call.
      *
@@ -77,7 +78,7 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("ItineraryId is required.");
     	}
     	
-    	return TransportApiClientCalls.getItinerary(tokenComponent, timeoutInSeconds, journeyId, itineraryId, exclude);
+    	return TransportApiClientCalls.getItinerary(tokenComponent, settings, journeyId, itineraryId, exclude);
     }
     
     /**
@@ -93,7 +94,7 @@ public class TransportApiClient {
     		options = AgencyQueryOptions.defaultQueryOptions();
     	}
     	
-    	return TransportApiClientCalls.getAgencies(tokenComponent, timeoutInSeconds, options, null, null, null);
+    	return TransportApiClientCalls.getAgencies(tokenComponent, settings, options, null, null, null);
     }
     
     /**
@@ -117,7 +118,7 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid limit. Valid values are positive numbers only.");
     	}
     	
-    	return TransportApiClientCalls.getAgencies(tokenComponent, timeoutInSeconds, options, new Point(longitude, latitude), radiusInMeters, null);
+    	return TransportApiClientCalls.getAgencies(tokenComponent, settings, options, new Point(longitude, latitude), radiusInMeters, null);
     }
     
     /**
@@ -145,14 +146,14 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid bounding box. See valid examples here: http://developer.whereismytransport.com/documentation#bounding-box.");
     	}
     	
-    	return TransportApiClientCalls.getAgencies(tokenComponent, timeoutInSeconds, options, null, null, boundingBox);
+    	return TransportApiClientCalls.getAgencies(tokenComponent, settings, options, null, null, boundingBox);
     }
-    
+        
     /**
      * Gets a specific agency.
      *
-     * @param  agencyId  	The id of the agency you want to get.
-     * @return      		An agency.
+     * @param  agencyId  		The id of the agency you want to get.
+     * @return      			An agency.
      */
     public TransportApiResult<Agency> getAgency(String agencyId)
     {
@@ -160,8 +161,8 @@ public class TransportApiClient {
     	{
     		throw new IllegalArgumentException("AgencyId is required.");
     	}
-    	
-    	return TransportApiClientCalls.getAgency(tokenComponent, timeoutInSeconds, agencyId);
+
+    	return TransportApiClientCalls.getAgency(tokenComponent, settings, agencyId);
     }
     
     /**
@@ -177,7 +178,7 @@ public class TransportApiClient {
     		options = LineQueryOptions.defaultQueryOptions();
     	}
     	
-    	return TransportApiClientCalls.getLines(tokenComponent, timeoutInSeconds, options, null, null, null);
+    	return TransportApiClientCalls.getLines(tokenComponent, settings, options, null, null, null);
     }
     
     /**
@@ -201,7 +202,7 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid limit. Valid values are positive numbers only.");
     	}
     	
-    	return TransportApiClientCalls.getLines(tokenComponent, timeoutInSeconds, options, new Point(longitude, latitude), radiusInMeters, null);
+    	return TransportApiClientCalls.getLines(tokenComponent, settings, options, new Point(longitude, latitude), radiusInMeters, null);
     }
     
     /**
@@ -229,14 +230,14 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid bounding box. See valid examples here: http://developer.whereismytransport.com/documentation#bounding-box.");
     	}
     	
-    	return TransportApiClientCalls.getLines(tokenComponent, timeoutInSeconds, options, null, null, boundingBox);
+    	return TransportApiClientCalls.getLines(tokenComponent, settings, options, null, null, boundingBox);
     }
     
     /**
      * Gets a specific line.
      *
-     * @param  lineId  	The id of the line you want to get.
-     * @return      	An line.
+     * @param  lineId  			The id of the line you want to get.
+     * @return      			A line.
      */
     public TransportApiResult<Line> getLine(String lineId)
     {
@@ -245,7 +246,8 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("LineId is required.");
     	}
     	
-    	return TransportApiClientCalls.getLine(tokenComponent, timeoutInSeconds, lineId);
+    	
+    	return TransportApiClientCalls.getLine(tokenComponent, settings, lineId);
     }
     
     /**
@@ -267,7 +269,7 @@ public class TransportApiClient {
     		options = LineTimetableQueryOptions.defaultQueryOptions();
     	}
     	
-    	return TransportApiClientCalls.getLineTimetable(tokenComponent, timeoutInSeconds, lineId, options);
+    	return TransportApiClientCalls.getLineTimetable(tokenComponent, settings, lineId, options);
     }
     
     /**
@@ -283,7 +285,7 @@ public class TransportApiClient {
     		options = StopQueryOptions.defaultQueryOptions();
     	}
     	
-    	return TransportApiClientCalls.getStops(tokenComponent, timeoutInSeconds, options, null, null, null);
+    	return TransportApiClientCalls.getStops(tokenComponent, settings, options, null, null, null);
     }
     
     /**
@@ -307,7 +309,7 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid limit. Valid values are positive numbers only.");
     	}
     	
-    	return TransportApiClientCalls.getStops(tokenComponent, timeoutInSeconds, options, new Point(longitude, latitude), radiusInMeters, null);
+    	return TransportApiClientCalls.getStops(tokenComponent, settings, options, new Point(longitude, latitude), radiusInMeters, null);
     }
     
     /**
@@ -335,7 +337,7 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("Invalid bounding box. See valid examples here: http://developer.whereismytransport.com/documentation#bounding-box.");
     	}
     	
-    	return TransportApiClientCalls.getStops(tokenComponent, timeoutInSeconds, options, null, null, boundingBox);
+    	return TransportApiClientCalls.getStops(tokenComponent, settings, options, null, null, boundingBox);
     }
     
     /**
@@ -351,7 +353,7 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("StopId is required.");
     	}
     	
-    	return TransportApiClientCalls.getStop(tokenComponent, timeoutInSeconds, stopId);
+    	return TransportApiClientCalls.getStop(tokenComponent, settings, stopId);
     }
     
     /**
@@ -373,7 +375,7 @@ public class TransportApiClient {
     		options = StopTimetableQueryOptions.defaultQueryOptions();
     	}
     	
-    	return TransportApiClientCalls.getStopTimetable(tokenComponent, timeoutInSeconds, stopId, options);
+    	return TransportApiClientCalls.getStopTimetable(tokenComponent, settings, stopId, options);
     }
     
     /**
@@ -389,7 +391,7 @@ public class TransportApiClient {
     		options = FareProductQueryOptions.defaultQueryOptions();
     	}
     	
-    	return TransportApiClientCalls.getFareProducts(tokenComponent, timeoutInSeconds, options);
+    	return TransportApiClientCalls.getFareProducts(tokenComponent, settings, options);
     }
     
     /**
@@ -405,6 +407,6 @@ public class TransportApiClient {
     		throw new IllegalArgumentException("FareProductId is required.");
     	}
     	
-    	return TransportApiClientCalls.getFareProduct(tokenComponent, timeoutInSeconds, fareProductId);
+    	return TransportApiClientCalls.getFareProduct(tokenComponent, settings, fareProductId);
     }
 }

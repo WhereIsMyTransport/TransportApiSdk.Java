@@ -28,6 +28,17 @@ public class AgencyTests {
 	}
 	
 	@Test
+	public void Agencies_UniqueContextId_IsSuccess() {
+		
+		AgencyQueryOptions options = AgencyQueryOptions.defaultQueryOptions();
+		
+		TransportApiResult<List<Agency>> agencies = client.getAgencies(options);
+		
+		assertTrue(agencies.isSuccess);
+		assertTrue(agencies.data.size() > 0);
+	}
+	
+	@Test
 	public void AgenciesNearby_DefaultValues_IsSuccess() {
 		
 		TransportApiResult<List<Agency>> agenciesNearby = client.getAgenciesNearby(AgencyQueryOptions.defaultQueryOptions(), defaultLatitude, defaultLongitude, defaultRadiusInMeters);

@@ -4,7 +4,7 @@
   <groupId>com.whereismytransport.transportapisdk</groupId>
   <artifactId>transportapisdk</artifactId>
   <name>transportapisdk</name>
-  <version>0.1.0</version>
+  <version>1.0.4</version>
   <description>Java Sdk for the WhereIsMyTransport platform.</description>
   <url>https://github.com/chrisk1ng/TransportApiSdk.Java</url>
   <developers>

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.whereismytransport.transportapisdk</groupId>
   <artifactId>transportapisdk</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.4</version>
   <packaging>jar</packaging>
   <name>transportapisdk</name>
   <description>Java Sdk for the WhereIsMyTransport platform.</description>
@@ -48,11 +48,11 @@
   		<version>20160810</version>
   	</dependency>
   	<dependency>
-  <groupId>junit</groupId>
-  <artifactId>junit</artifactId>
-  <version>4.11</version>
-  <scope>test</scope>
-</dependency>
+    	<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.11</version>
+  		<scope>test</scope>
+	</dependency>
   </dependencies>
   <build>
   	<plugins>

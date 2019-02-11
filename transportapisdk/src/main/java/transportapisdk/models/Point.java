@@ -32,6 +32,11 @@ public class Point extends Geometry
 		return coordinates;
 	}
 	
+	/**
+    *
+    * @return
+    * Comma separated string of coordinates in the format: latitude,longitude.
+    */
 	public String toString()
 	{
 		return coordinates.get(1) + "," + coordinates.get(0);

@@ -9,11 +9,11 @@ public class StopQueryOptions extends QueryOptions
 	
 	public boolean showChildren;
 	public List<String> servesLines;
-	
+		
 	public StopQueryOptions(List<String> onlyAgencies, List<String> omitAgencies, List<String> onlyModes, List<String> omitModes, List<String> servesLines, boolean showChildren, int limit, int offset, String exclude) 
 	{
 		super(onlyAgencies, omitAgencies, onlyModes, omitModes, limit, offset, exclude);
-
+		
 		this.showChildren = showChildren;
 		this.servesLines = servesLines;
 	}
